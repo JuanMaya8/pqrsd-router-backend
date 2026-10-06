@@ -1,0 +1,985 @@
+{
+ "taxonomy": {
+  "types": [
+   {
+    "id": "peticion",
+    "label": "Petición",
+    "description": "Solicitud respetuosa de información, documentos, un trámite o una actuación de la entidad."
+   },
+   {
+    "id": "queja",
+    "label": "Queja",
+    "description": "Inconformidad con la conducta o actuación de un servidor público."
+   },
+   {
+    "id": "reclamo",
+    "label": "Reclamo",
+    "description": "Inconformidad por un servicio no prestado o prestado de forma deficiente; se exige solución."
+   },
+   {
+    "id": "sugerencia",
+    "label": "Sugerencia",
+    "description": "Propuesta para mejorar un servicio, trámite o política de la entidad."
+   },
+   {
+    "id": "denuncia",
+    "label": "Denuncia",
+    "description": "Pone en conocimiento hechos presuntamente irregulares, corruptos o delictivos."
+   }
+  ],
+  "urgency": [
+   {
+    "id": "critical",
+    "label": "Crítica",
+    "description": "Riesgo inminente para la vida, la integridad o la seguridad de personas."
+   },
+   {
+    "id": "high",
+    "label": "Alta",
+    "description": "Derechos fundamentales, población vulnerable o plazos vencidos."
+   },
+   {
+    "id": "medium",
+    "label": "Media",
+    "description": "Trámite o inconformidad ordinaria."
+   },
+   {
+    "id": "low",
+    "label": "Baja",
+    "description": "Sugerencias o solicitudes sin afectación actual."
+   }
+  ],
+  "subtypes": [
+   {
+    "id": "general",
+    "label": "Petición general",
+    "description": "Solicitud general (15 días hábiles)."
+   },
+   {
+    "id": "information",
+    "label": "Solicitud de información o documentos",
+    "description": "Copias, certificaciones o acceso a información (10 días hábiles)."
+   },
+   {
+    "id": "consultation",
+    "label": "Consulta",
+    "description": "Consulta a la autoridad sobre asuntos a su cargo (30 días hábiles)."
+   }
+  ],
+  "dependencies": [
+   {
+    "id": "atencion_ciudadano",
+    "name": "Atención al Ciudadano",
+    "description": "Orientación general, radicación y asuntos sin dependencia clara.",
+    "keywords": [
+     "atencion al ciudadano",
+     "ventanilla",
+     "radicacion",
+     "turno",
+     "horario de atencion",
+     "pagina web",
+     "pqrs",
+     "no me responden",
+     "oficina de atencion"
+    ]
+   },
+   {
+    "id": "salud",
+    "name": "Secretaría de Salud",
+    "description": "Servicios de salud, EPS/IPS, vacunación y salud pública.",
+    "keywords": [
+     "eps",
+     "ips",
+     "hospital",
+     "clinica",
+     "medico",
+     "medicamento",
+     "cita medica",
+     "vacuna",
+     "urgencias",
+     "salud",
+     "ambulancia",
+     "historia clinica",
+     "regimen subsidiado",
+     "tratamiento",
+     "dengue",
+     "puesto de salud"
+    ]
+   },
+   {
+    "id": "movilidad",
+    "name": "Secretaría de Movilidad y Tránsito",
+    "description": "Tránsito, transporte público, comparendos y licencias.",
+    "keywords": [
+     "transito",
+     "comparendo",
+     "fotomulta",
+     "foto multa",
+     "semaforo",
+     "pico y placa",
+     "licencia de conduccion",
+     "tarjeta de propiedad",
+     "runt",
+     "parqueadero",
+     "oficina de transito",
+     "transporte publico",
+     "bus",
+     "taxi",
+     "agente de transito",
+     "patios",
+     "senalizacion",
+     "vehiculo"
+    ]
+   },
+   {
+    "id": "hacienda",
+    "name": "Secretaría de Hacienda e Impuestos",
+    "description": "Impuestos, facturación, pagos y cobro coactivo.",
+    "keywords": [
+     "impuesto",
+     "predial",
+     "industria y comercio",
+     "valorizacion",
+     "paz y salvo",
+     "recaudo",
+     "cobro coactivo",
+     "declaracion de renta",
+     "tarifa",
+     "devolucion de pago",
+     "pago doble",
+     "factura de impuesto",
+     "embargo de cuentas",
+     "sancion tributaria"
+    ]
+   },
+   {
+    "id": "infraestructura",
+    "name": "Obras Públicas e Infraestructura",
+    "description": "Vías, andenes, alumbrado, puentes y obras.",
+    "keywords": [
+     "hueco",
+     "huecos",
+     "via",
+     "pavimento",
+     "anden",
+     "puente",
+     "obra publica",
+     "alcantarilla",
+     "alumbrado publico",
+     "reparcheo",
+     "contratista",
+     "escombros",
+     "mantenimiento vial",
+     "calle danada",
+     "bache",
+     "poste"
+    ]
+   },
+   {
+    "id": "educacion",
+    "name": "Secretaría de Educación",
+    "description": "Colegios públicos, cupos, docentes y alimentación escolar.",
+    "keywords": [
+     "colegio",
+     "escuela",
+     "docente",
+     "profesor",
+     "rector",
+     "cupo escolar",
+     "matricula",
+     "alimentacion escolar",
+     "restaurante escolar",
+     "transporte escolar",
+     "estudiante",
+     "beca",
+     "secretaria de educacion",
+     "bachillerato"
+    ]
+   },
+   {
+    "id": "ambiente",
+    "name": "Secretaría de Ambiente",
+    "description": "Contaminación, árboles, fauna, ruido ambiental y recursos naturales.",
+    "keywords": [
+     "contaminacion",
+     "arbol",
+     "arboles",
+     "poda",
+     "tala",
+     "quebrada",
+     "rio",
+     "maltrato animal",
+     "fauna",
+     "quema",
+     "vertimiento",
+     "humo",
+     "basura en el rio",
+     "ambiental",
+     "mascotas",
+     "ruido de fabrica"
+    ]
+   },
+   {
+    "id": "planeacion",
+    "name": "Planeación y Urbanismo",
+    "description": "Licencias, uso del suelo, estratificación y espacio público.",
+    "keywords": [
+     "licencia de construccion",
+     "curaduria",
+     "uso del suelo",
+     "estratificacion",
+     "plan de ordenamiento",
+     "construccion ilegal",
+     "invasion",
+     "lote",
+     "nomenclatura",
+     "urbanismo",
+     "espacio publico",
+     "andenes invadidos",
+     "estrato",
+     "obra sin licencia"
+    ]
+   },
+   {
+    "id": "servicios_publicos",
+    "name": "Servicios Públicos Domiciliarios",
+    "description": "Agua, alcantarillado, energía, gas y aseo.",
+    "keywords": [
+     "agua",
+     "acueducto",
+     "alcantarillado",
+     "energia",
+     "gas",
+     "fuga de gas",
+     "factura de agua",
+     "fuga de agua",
+     "aseo",
+     "recoleccion de basuras",
+     "medidor",
+     "corte del servicio",
+     "reconexion",
+     "apagon",
+     "presion del agua",
+     "factura de servicios",
+     "recibo de agua",
+     "recibo de luz",
+     "basuras"
+    ]
+   },
+   {
+    "id": "seguridad",
+    "name": "Seguridad y Convivencia",
+    "description": "Seguridad ciudadana, convivencia, policía y comisarías.",
+    "keywords": [
+     "policia",
+     "robo",
+     "hurto",
+     "atraco",
+     "inseguridad",
+     "pandilla",
+     "rina",
+     "cai",
+     "camaras de seguridad",
+     "microtrafico",
+     "convivencia",
+     "inspeccion de policia",
+     "bar",
+     "venta de licor",
+     "vigilancia",
+     "ruido de vecinos",
+     "ruido",
+     "venta de drogas",
+     "expendio de drogas",
+     "drogas",
+     "fiesta",
+     "consumo de drogas"
+    ]
+   },
+   {
+    "id": "control_interno",
+    "name": "Control Interno Disciplinario",
+    "description": "Conductas de servidores públicos, corrupción y contratación irregular.",
+    "keywords": [
+     "funcionario corrupto",
+     "soborno",
+     "coima",
+     "investigacion disciplinaria",
+     "proceso disciplinario",
+     "conducta del servidor",
+     "contrato irregular",
+     "trafico de influencias",
+     "nepotismo",
+     "peculado",
+     "abuso de autoridad",
+     "licitacion",
+     "dinero por debajo de la mesa",
+     "pidio dinero",
+     "me pidio dinero",
+     "agilizar el tramite",
+     "sin concurso",
+     "corrupcion",
+     "cobro indebido"
+    ]
+   },
+   {
+    "id": "desarrollo_social",
+    "name": "Desarrollo Social",
+    "description": "Subsidios, adulto mayor, víctimas, población vulnerable y familia.",
+    "keywords": [
+     "subsidio",
+     "adulto mayor",
+     "colombia mayor",
+     "subsidio de arriendo",
+     "victima",
+     "desplazado",
+     "familias en accion",
+     "sisben",
+     "ayuda humanitaria",
+     "discapacidad",
+     "habitante de calle",
+     "comisaria de familia",
+     "violencia intrafamiliar",
+     "bienestar",
+     "madre cabeza de hogar",
+     "jovenes en accion",
+     "bono"
+    ]
+   }
+  ],
+  "fallback_dependency": "atencion_ciudadano"
+ },
+ "classifications": [
+  {
+   "text": "Hace una semana no llega el agua a mi barrio Santa Lucía y tengo un bebé de meses. Soy Ana Pérez, cédula 52.123.456, cel 3001234567.",
+   "response": {
+    "type": {
+     "id": "reclamo",
+     "label": "Reclamo",
+     "confidence": 0.5127,
+     "alternatives": [
+      {
+       "id": "peticion",
+       "label": "Petición",
+       "confidence": 0.1491
+      },
+      {
+       "id": "sugerencia",
+       "label": "Sugerencia",
+       "confidence": 0.146
+      }
+     ],
+     "reasons": [
+      "El texto contiene «no llega», expresiones propias de un reclamo.",
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 51 % de probabilidad a «Reclamo»."
+     ]
+    },
+    "dependency": {
+     "id": "servicios_publicos",
+     "label": "Servicios Públicos Domiciliarios",
+     "confidence": 0.4046,
+     "alternatives": [
+      {
+       "id": "movilidad",
+       "label": "Secretaría de Movilidad y Tránsito",
+       "confidence": 0.2421
+      },
+      {
+       "id": "seguridad",
+       "label": "Seguridad y Convivencia",
+       "confidence": 0.0512
+      }
+     ],
+     "reasons": [
+      "Menciona «agua», asuntos de Servicios Públicos Domiciliarios.",
+      "Probabilidad estimada para Servicios Públicos Domiciliarios: 40 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "medium",
+     "label": "Media",
+     "confidence": 0.3626,
+     "alternatives": [
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.3404
+      },
+      {
+       "id": "low",
+       "label": "Baja",
+       "confidence": 0.177
+      }
+     ],
+     "reasons": [
+      "El modelo estima urgencia media por el contenido general del texto."
+     ],
+     "priority_score": 53.8
+    },
+    "subtype": null,
+    "entities": [
+     {
+      "type": "date",
+      "label": "Fecha",
+      "text": "Hace una semana",
+      "start": 0,
+      "end": 15,
+      "value": "2025-02-26",
+      "pii": false,
+      "approx": true
+     },
+     {
+      "type": "place",
+      "label": "Lugar",
+      "text": "barrio Santa Lucía",
+      "start": 38,
+      "end": 56,
+      "value": "Santa Lucía",
+      "pii": false,
+      "approx": false
+     },
+     {
+      "type": "person",
+      "label": "Persona",
+      "text": "Ana Pérez",
+      "start": 87,
+      "end": 96,
+      "value": "Ana Pérez",
+      "pii": true,
+      "approx": false
+     },
+     {
+      "type": "document_id",
+      "label": "Documento de identidad",
+      "text": "cédula 52.123.456",
+      "start": 98,
+      "end": 115,
+      "value": "52123456",
+      "pii": true,
+      "approx": false
+     },
+     {
+      "type": "phone",
+      "label": "Teléfono",
+      "text": "3001234567",
+      "start": 121,
+      "end": 131,
+      "value": "3001234567",
+      "pii": true,
+      "approx": false
+     }
+    ],
+    "needs_review": false,
+    "review_reasons": [],
+    "redacted_text": null,
+    "word_count": 23,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 69.13
+   }
+  },
+  {
+   "text": "Solicito copia del contrato de obra número 2345 de 2024 celebrado para la construcción del parque.",
+   "response": {
+    "type": {
+     "id": "peticion",
+     "label": "Petición",
+     "confidence": 0.6028,
+     "alternatives": [
+      {
+       "id": "denuncia",
+       "label": "Denuncia",
+       "confidence": 0.1145
+      },
+      {
+       "id": "sugerencia",
+       "label": "Sugerencia",
+       "confidence": 0.1115
+      }
+     ],
+     "reasons": [
+      "El texto contiene «solicito», expresiones propias de una petición.",
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 60 % de probabilidad a «Petición»."
+     ]
+    },
+    "dependency": {
+     "id": "infraestructura",
+     "label": "Obras Públicas e Infraestructura",
+     "confidence": 0.4891,
+     "alternatives": [
+      {
+       "id": "planeacion",
+       "label": "Planeación y Urbanismo",
+       "confidence": 0.4482
+      },
+      {
+       "id": "ambiente",
+       "label": "Secretaría de Ambiente",
+       "confidence": 0.0172
+      }
+     ],
+     "reasons": [
+      "Probabilidad estimada para Obras Públicas e Infraestructura: 49 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "medium",
+     "label": "Media",
+     "confidence": 0.4066,
+     "alternatives": [
+      {
+       "id": "low",
+       "label": "Baja",
+       "confidence": 0.3384
+      },
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.1305
+      }
+     ],
+     "reasons": [
+      "El modelo estima urgencia media por el contenido general del texto."
+     ],
+     "priority_score": 43.4
+    },
+    "subtype": {
+     "id": "information",
+     "label": "Solicitud de información o documentos",
+     "confidence": 0.7673,
+     "reasons": [
+      "Pide información o documentos («copia del contrato», «copia», «copia del»): la ley da 10 días hábiles."
+     ]
+    },
+    "entities": [],
+    "needs_review": true,
+    "review_reasons": [
+     "Dos dependencias son casi igual de probables: Obras Públicas e Infraestructura y Planeación y Urbanismo."
+    ],
+    "redacted_text": null,
+    "word_count": 14,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 7.72
+   }
+  },
+  {
+   "text": "Denuncio que un funcionario de la oficina de tránsito me pidió 200 mil pesos para agilizar el trámite de mi licencia.",
+   "response": {
+    "type": {
+     "id": "denuncia",
+     "label": "Denuncia",
+     "confidence": 0.7675,
+     "alternatives": [
+      {
+       "id": "peticion",
+       "label": "Petición",
+       "confidence": 0.0709
+      },
+      {
+       "id": "queja",
+       "label": "Queja",
+       "confidence": 0.0695
+      }
+     ],
+     "reasons": [
+      "El texto contiene «denuncio», «pidio 200», «para agilizar», expresiones propias de una denuncia.",
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 77 % de probabilidad a «Denuncia»."
+     ]
+    },
+    "dependency": {
+     "id": "movilidad",
+     "label": "Secretaría de Movilidad y Tránsito",
+     "confidence": 0.7294,
+     "alternatives": [
+      {
+       "id": "control_interno",
+       "label": "Control Interno Disciplinario",
+       "confidence": 0.1373
+      },
+      {
+       "id": "atencion_ciudadano",
+       "label": "Atención al Ciudadano",
+       "confidence": 0.0396
+      }
+     ],
+     "reasons": [
+      "Menciona «oficina de transito», «transito», asuntos de Secretaría de Movilidad y Tránsito.",
+      "Probabilidad estimada para Secretaría de Movilidad y Tránsito: 73 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "medium",
+     "label": "Media",
+     "confidence": 0.5157,
+     "alternatives": [
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.1884
+      },
+      {
+       "id": "low",
+       "label": "Baja",
+       "confidence": 0.1604
+      }
+     ],
+     "reasons": [
+      "No se encontraron señales de riesgo, vulnerabilidad ni plazos vencidos: urgencia ordinaria."
+     ],
+     "priority_score": 50.5
+    },
+    "subtype": null,
+    "entities": [
+     {
+      "type": "amount",
+      "label": "Monto",
+      "text": "200 mil pesos",
+      "start": 63,
+      "end": 76,
+      "value": "200000",
+      "pii": false,
+      "approx": false
+     }
+    ],
+    "needs_review": false,
+    "review_reasons": [],
+    "redacted_text": null,
+    "word_count": 20,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 8.01
+   }
+  },
+  {
+   "text": "Hay una fuga de gas en el edificio de la calle 10 #5-20, huele muy fuerte desde esta mañana.",
+   "response": {
+    "type": {
+     "id": "reclamo",
+     "label": "Reclamo",
+     "confidence": 0.3241,
+     "alternatives": [
+      {
+       "id": "peticion",
+       "label": "Petición",
+       "confidence": 0.197
+      },
+      {
+       "id": "denuncia",
+       "label": "Denuncia",
+       "confidence": 0.1966
+      }
+     ],
+     "reasons": [
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 32 % de probabilidad a «Reclamo»."
+     ]
+    },
+    "dependency": {
+     "id": "infraestructura",
+     "label": "Obras Públicas e Infraestructura",
+     "confidence": 0.3024,
+     "alternatives": [
+      {
+       "id": "servicios_publicos",
+       "label": "Servicios Públicos Domiciliarios",
+       "confidence": 0.2376
+      },
+      {
+       "id": "planeacion",
+       "label": "Planeación y Urbanismo",
+       "confidence": 0.0957
+      }
+     ],
+     "reasons": [
+      "Probabilidad estimada para Obras Públicas e Infraestructura: 30 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "critical",
+     "label": "Crítica",
+     "confidence": 0.5103,
+     "alternatives": [
+      {
+       "id": "medium",
+       "label": "Media",
+       "confidence": 0.2719
+      },
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.1101
+      }
+     ],
+     "reasons": [
+      "Urgencia crítica porque el texto menciona «fuga de gas», «huele muy fuerte»."
+     ],
+     "priority_score": 85.0
+    },
+    "subtype": null,
+    "entities": [
+     {
+      "type": "address",
+      "label": "Dirección",
+      "text": "calle 10 #5-20",
+      "start": 41,
+      "end": 55,
+      "value": null,
+      "pii": true,
+      "approx": false
+     }
+    ],
+    "needs_review": true,
+    "review_reasons": [
+     "La IA no está segura del tipo de solicitud.",
+     "La IA no está segura de la dependencia competente.",
+     "Dos dependencias son casi igual de probables: Obras Públicas e Infraestructura y Servicios Públicos Domiciliarios."
+    ],
+    "redacted_text": null,
+    "word_count": 17,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 6.66
+   }
+  },
+  {
+   "text": "Sugiero que instalen más canecas de reciclaje en el parque principal.",
+   "response": {
+    "type": {
+     "id": "sugerencia",
+     "label": "Sugerencia",
+     "confidence": 0.7765,
+     "alternatives": [
+      {
+       "id": "reclamo",
+       "label": "Reclamo",
+       "confidence": 0.0709
+      },
+      {
+       "id": "peticion",
+       "label": "Petición",
+       "confidence": 0.0653
+      }
+     ],
+     "reasons": [
+      "El texto contiene «sugiero», «sugiero que», «instalen mas», expresiones propias de una sugerencia.",
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 78 % de probabilidad a «Sugerencia»."
+     ]
+    },
+    "dependency": {
+     "id": "ambiente",
+     "label": "Secretaría de Ambiente",
+     "confidence": 0.7201,
+     "alternatives": [
+      {
+       "id": "infraestructura",
+       "label": "Obras Públicas e Infraestructura",
+       "confidence": 0.0753
+      },
+      {
+       "id": "movilidad",
+       "label": "Secretaría de Movilidad y Tránsito",
+       "confidence": 0.0575
+      }
+     ],
+     "reasons": [
+      "Probabilidad estimada para Secretaría de Ambiente: 72 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "low",
+     "label": "Baja",
+     "confidence": 0.5382,
+     "alternatives": [
+      {
+       "id": "medium",
+       "label": "Media",
+       "confidence": 0.2849
+      },
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.0912
+      }
+     ],
+     "reasons": [
+      "Urgencia baja porque el texto menciona «sugiero», «mas canecas»."
+     ],
+     "priority_score": 34.7
+    },
+    "subtype": null,
+    "entities": [],
+    "needs_review": false,
+    "review_reasons": [],
+    "redacted_text": null,
+    "word_count": 11,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 4.8
+   }
+  },
+  {
+   "text": "ayuda",
+   "response": {
+    "type": {
+     "id": "peticion",
+     "label": "Petición",
+     "confidence": 0.2363,
+     "alternatives": [
+      {
+       "id": "reclamo",
+       "label": "Reclamo",
+       "confidence": 0.2334
+      },
+      {
+       "id": "sugerencia",
+       "label": "Sugerencia",
+       "confidence": 0.1998
+      }
+     ],
+     "reasons": [
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 24 % de probabilidad a «Petición»."
+     ]
+    },
+    "dependency": {
+     "id": "desarrollo_social",
+     "label": "Desarrollo Social",
+     "confidence": 0.5709,
+     "alternatives": [
+      {
+       "id": "movilidad",
+       "label": "Secretaría de Movilidad y Tránsito",
+       "confidence": 0.0533
+      },
+      {
+       "id": "hacienda",
+       "label": "Secretaría de Hacienda e Impuestos",
+       "confidence": 0.0517
+      }
+     ],
+     "reasons": [
+      "Probabilidad estimada para Desarrollo Social: 57 %."
+     ],
+     "routed_to_fallback": false
+    },
+    "urgency": {
+     "id": "medium",
+     "label": "Media",
+     "confidence": 0.3951,
+     "alternatives": [
+      {
+       "id": "low",
+       "label": "Baja",
+       "confidence": 0.2188
+      },
+      {
+       "id": "critical",
+       "label": "Crítica",
+       "confidence": 0.1947
+      }
+     ],
+     "reasons": [
+      "No se encontraron señales de riesgo, vulnerabilidad ni plazos vencidos: urgencia ordinaria."
+     ],
+     "priority_score": 52.2
+    },
+    "subtype": {
+     "id": "general",
+     "label": "Petición general",
+     "confidence": 0.6844,
+     "reasons": [
+      "Petición general: 15 días hábiles."
+     ]
+    },
+    "entities": [],
+    "needs_review": true,
+    "review_reasons": [
+     "La IA no está segura del tipo de solicitud.",
+     "El texto es muy corto para clasificarlo con confianza."
+    ],
+    "redacted_text": null,
+    "word_count": 1,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 2.61
+   }
+  },
+  {
+   "text": "asdf qwer zxcv lorem ipsum dolor sit amet",
+   "response": {
+    "type": {
+     "id": "reclamo",
+     "label": "Reclamo",
+     "confidence": 0.2448,
+     "alternatives": [
+      {
+       "id": "peticion",
+       "label": "Petición",
+       "confidence": 0.2397
+      },
+      {
+       "id": "sugerencia",
+       "label": "Sugerencia",
+       "confidence": 0.2192
+      }
+     ],
+     "reasons": [
+      "El modelo, entrenado con ejemplos de PQRSD, asigna 24 % de probabilidad a «Reclamo»."
+     ]
+    },
+    "dependency": {
+     "id": "atencion_ciudadano",
+     "label": "Atención al Ciudadano",
+     "confidence": 0.2225,
+     "alternatives": [
+      {
+       "id": "salud",
+       "label": "Secretaría de Salud",
+       "confidence": 0.2225
+      },
+      {
+       "id": "ambiente",
+       "label": "Secretaría de Ambiente",
+       "confidence": 0.147
+      }
+     ],
+     "reasons": [
+      "Probabilidad estimada para Secretaría de Salud: 22 %.",
+      "Como la confianza es baja, se sugiere enviarla a Atención al Ciudadano para que la redirija."
+     ],
+     "routed_to_fallback": true
+    },
+    "urgency": {
+     "id": "medium",
+     "label": "Media",
+     "confidence": 0.4336,
+     "alternatives": [
+      {
+       "id": "low",
+       "label": "Baja",
+       "confidence": 0.2325
+      },
+      {
+       "id": "high",
+       "label": "Alta",
+       "confidence": 0.186
+      }
+     ],
+     "reasons": [
+      "No se encontraron señales de riesgo, vulnerabilidad ni plazos vencidos: urgencia ordinaria."
+     ],
+     "priority_score": 49.1
+    },
+    "subtype": null,
+    "entities": [],
+    "needs_review": true,
+    "review_reasons": [
+     "La IA no está segura del tipo de solicitud.",
+     "La IA no está segura de la dependencia competente.",
+     "Dos dependencias son casi igual de probables: Secretaría de Salud y Secretaría de Ambiente."
+    ],
+    "redacted_text": null,
+    "word_count": 8,
+    "model_version": "hybrid-1791318693",
+    "latency_ms": 3.13
+   }
+  }
+ ]
+}
