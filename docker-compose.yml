@@ -1,0 +1,34 @@
+# Backend + IA together. Expects the AI repo next to this one:  ../pqrsd-router-ai
+# (or replace `build:` with an image once you publish it).
+# NODE_ENV=production requires STAFF_API_KEY:  STAFF_API_KEY=cambia-esto docker compose up --build
+services:
+  ai:
+    build: ../pqrsd-router-ai
+    environment:
+      MODELS_DIR: /data/models
+      FEEDBACK_FILE: /data/feedback/feedback.jsonl
+      AI_API_KEY: ${AI_API_KEY:-}
+    volumes:
+      - ai-models:/data/models
+      - ai-feedback:/data/feedback
+    ports:
+      - "8000:8000"
+  backend:
+    build: .
+    depends_on: [ai]
+    environment:
+      PORT: 3001
+      DATA_DIR: /data
+      AI_URL: http://ai:8000
+      AI_API_KEY: ${AI_API_KEY:-}
+      STAFF_API_KEY: ${STAFF_API_KEY:?define STAFF_API_KEY}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      - backend-data:/data
+    ports:
+      - "3001:3001"
+volumes:
+  ai-models:
+  ai-feedback:
+  backend-data:
