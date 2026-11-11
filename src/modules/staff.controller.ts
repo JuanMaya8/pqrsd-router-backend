@@ -70,8 +70,8 @@ export class StaffController {
   @Post('pqrsd/:id/answer')
   @HttpCode(200)
   @ApiOperation({ summary: 'Registra la respuesta al ciudadano' })
-  answer(@Param('id') id: string, @Body() body: AnswerDoc) {
-    return this.service.answer(id, body);
+  answer(@Param('id') id: string, @Body() body: AnswerDoc, @StaffName() actor: string) {
+    return this.service.answer(id, body, actor);
   }
 
   @Post('pqrsd/:id/close')
