@@ -95,10 +95,11 @@ No aplica a este repo (API JSON + WebSocket). El patrón por ruta (SSG / CSR / S
 | Estado | Elemento |
 |--------|----------|
 | ✅ Verificado (51 pruebas ejecutadas con `tsx --test`, Node 22; `tsc` limpio) | Calendario de festivos y días hábiles, plazos legales y SLA, flujo de estados, radicación con contador concurrente, persistencia y recuperación tras reinicio, respaldo cuando la IA cae (y recuperación), retroalimentación anonimizada, filtros/orden/CSV, estadísticas, transparencia pública sin datos personales, demostración, importación por lotes con IA que muere a mitad, validación, límite de tasa, **contrato contra salida real de la IA** |
-| ⚠️ Escrito pero **no ejecutado** (no se pudo instalar NestJS: registro npm bloqueado) | Capa Nest: controladores, guardas, gateway socket.io, Swagger, `main.ts`; `test/http/app.e2e.test.ts`; `Dockerfile`, `docker-compose.yml`, CI; `scripts/import-github-issues.mjs` (sin internet). La capa Nest se comprobó con `tsc` contra tipos simulados de Nest, así que los **tipos propios** son coherentes, pero el cableado de decoradores no se ha ejecutado |
+| ✅ Verificado al retomar (Node 22, NestJS 10 real) | Capa Nest: `npm run typecheck` limpio, `npm run test:http` → 8 de 8 (HTTP + socket.io real contra una IA falsa), `npm run build`; backend compilado + `pqrsd-router-ai` real + frontend con `next start` recorridos en Chromium (radicar, socket «En vivo», caso nuevo en tiempo real, consulta SSR); `docker compose up --build` de los 3 repos. Dos correcciones: `OnModuleDestroy` se importa de `@nestjs/common` y el JSON mal formado responde `INVALID_JSON` (Nest convierte el `SyntaxError` en `BadRequestException` antes del filtro) |
+| ⚠️ Escrito pero no ejecutado | `scripts/import-github-issues.mjs` contra la API de GitHub |
 | ❌ No hecho | PostgreSQL, autenticación por usuario/roles (hoy una clave compartida), notificación por correo/SMS al ciudadano, adjuntos, asignación a un funcionario concreto, prórrogas y traslados por competencia (Art. 14 par. y Art. 21), recordatorios de vencimiento, auditoría inmutable, paginación por cursor |
 
-Tras `npm install`, **lo primero** es `npm run test:http` y `npm run build`: si algo falla ahí es la capa Nest nunca ejecutada.
+`npm run test:http` y `npm run build` forman parte de la CI.
 
 ## Prueba de volumen con datos públicos reales
 `node scripts/import-github-issues.mjs --repo=owner/name --max=1000 --key=$STAFF_API_KEY` descarga issues reales de GitHub y los importa como casos de demostración
