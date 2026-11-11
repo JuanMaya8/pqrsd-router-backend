@@ -49,7 +49,8 @@ Con las dos piezas juntas y PostgreSQL: `STAFF_API_KEY=cambia-esto docker compos
 ### Variables de entorno (`.env.example`)
 | Variable | Por defecto | Para qué |
 |----------|-------------|----------|
-| `STAFF_API_KEY` | — | Clave `X-Staff-Key` de los funcionarios (rutas `/staff/*` y sala de socket). **Obligatoria en producción** |
+| `STAFF_API_KEY` | — | Clave compartida `X-Staff-Key` de los funcionarios (rutas `/staff/*` y sala de socket). **En producción hace falta esta o `STAFF_USERS`** |
+| `STAFF_USERS` | — | Cuentas con nombre `Ana Pérez:clave-ana,Luis Ruiz:clave-luis` (claves de 8+ caracteres). El nombre queda en `timeline[].actor`; `GET /staff/me` lo devuelve |
 | `AI_URL`, `AI_API_KEY`, `AI_TIMEOUT_MS` | `http://localhost:8000`, —, `8000` | Servicio de IA. Pasado el timeout se usa el respaldo y se omite la IA 20 s |
 | `DATA_DIR` | `./data` | Un archivo JSON por caso (solo si no hay `DATABASE_URL`; montar volumen) |
 | `DATABASE_URL`, `DATABASE_SSL` | —, `false` | PostgreSQL (migraciones automáticas al arrancar). `DATABASE_SSL=true` para conexiones externas que exigen TLS |
