@@ -241,7 +241,7 @@ export class PqrsdService {
       rec.deadline = { ...rec.deadline, dueDate: addBusinessDays(rec.deadline.dueDate, rec.extension.days) };
     }
     rec.reviewed = true;
-    this.event(rec, 'reclassified', 'staff', [changes.join('; '), input.note].filter(Boolean).join(' — ') || undefined);
+    this.event(rec, 'reclassified', 'staff', [changes.join('; '), input.note].filter(Boolean).join(' — ') || undefined, actor);
     await this.d.repo.update(rec);
     if (changes.length) this.sendFeedback(rec);
     return this.emitUpdated(rec);
