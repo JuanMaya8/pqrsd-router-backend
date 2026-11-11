@@ -39,6 +39,20 @@ export class StaffController {
     return this.service.reclassify(id, body);
   }
 
+  @Post('pqrsd/:id/assign')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Asigna un funcionario responsable (assignee: null quita la asignación)' })
+  assign(@Param('id') id: string, @Body() body: AssignDoc) {
+    return this.service.assign(id, body);
+  }
+
+  @Post('pqrsd/:id/extend')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Amplía el plazo legal una vez, antes del vencimiento y hasta el doble del término inicial (Art. 14 parágrafo, Ley 1437)' })
+  extend(@Param('id') id: string, @Body() body: ExtendDoc) {
+    return this.service.extend(id, body);
+  }
+
   @Post('pqrsd/:id/answer')
   @HttpCode(200)
   @ApiOperation({ summary: 'Registra la respuesta al ciudadano' })
