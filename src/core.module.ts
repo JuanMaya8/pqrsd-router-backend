@@ -21,7 +21,7 @@ export class CoreModule {
     const events = new EventBus();
     const ai = new AiClient({ baseUrl: config.aiUrl, apiKey: config.aiApiKey, timeoutMs: config.aiTimeoutMs, fetchImpl });
     const service = new PqrsdService({
-      repo: new BlobPqrsdRepository(new FileBlobStore(join(config.dataDir, 'pqrsd'))),
+      repo: infra.repo ?? new BlobPqrsdRepository(new FileBlobStore(join(config.dataDir, 'pqrsd'))),
       ai,
       events,
       clock: systemClock,
