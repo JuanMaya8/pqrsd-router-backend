@@ -22,3 +22,4 @@ export * from './workflow';
 export * from './rate-limiter';
 export * from './notifier';
 export * from './pg-repository';
+export * from './staff-users';
