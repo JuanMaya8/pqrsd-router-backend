@@ -78,9 +78,9 @@ Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-
 * Validar con el área jurídica de la entidad la tabla de plazos (`deadlines.ts`), sobre todo denuncias.
 
 ## 6. Checklist para llegar al 100 % (en orden)
-1. Ejecutar y arreglar la capa Nest (`test:http`, `build`, `docker build`).
-2. Integración real con `pqrsd-router-ai` (levantar ambos con `docker compose`, radicar, corregir, `POST /staff/ai/retrain`).
-3. Integración con `pqrsd-router-frontend` (CORS, `X-Staff-Key`, socket con `auth.staffKey`).
+1. ~~Ejecutar y arreglar la capa Nest (`test:http`, `build`, `docker build`).~~ ✅
+2. ~~Integración real con `pqrsd-router-ai` (levantar ambos con `docker compose`, radicar, corregir, `POST /staff/ai/retrain`).~~ ✅
+3. ~~Integración con `pqrsd-router-frontend` (CORS, `X-Staff-Key`, socket con `auth.staffKey`).~~ ✅
 4. PostgreSQL + migraciones; mover `FileBlobStore` a desarrollo.
 5. Usuarios y roles; notificaciones; asignación a funcionarios; prórrogas.
 6. Medir con PQRSD reales etiquetadas (`aiAgreementRate` es el termómetro), ajustar `AUTO_ASSIGN_MIN_CONFIDENCE` solo después de medir.
