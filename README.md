@@ -53,7 +53,7 @@ Con las dos piezas juntas y PostgreSQL: `STAFF_API_KEY=cambia-esto docker compos
 | `STAFF_USERS` | — | Cuentas con nombre `Ana Pérez:clave-ana,Luis Ruiz:clave-luis` (claves de 8+ caracteres). El nombre queda en `timeline[].actor`; `GET /staff/me` lo devuelve |
 | `AI_URL`, `AI_API_KEY`, `AI_TIMEOUT_MS` | `http://localhost:8000`, —, `8000` | Servicio de IA. Pasado el timeout se usa el respaldo y se omite la IA 20 s |
 | `DATA_DIR` | `./data` | Un archivo JSON por caso (solo si no hay `DATABASE_URL`; montar volumen) |
-| `DATABASE_URL`, `DATABASE_SSL` | —, `false` | PostgreSQL (migraciones automáticas al arrancar). `DATABASE_SSL=true` para conexiones externas que exigen TLS |
+| `DATABASE_URL`, `DATABASE_SSL` | —, `false` | PostgreSQL (migraciones automáticas al arrancar). TLS automático con Neon o `sslmode=require`; `DATABASE_SSL=true` lo fuerza |
 | `SMTP_URL`, `MAIL_FROM` | —, `PQRSD <no-reply@localhost>` | Correos al ciudadano (radicación, ampliación, respuesta). Vacío = no se envían |
 | `PUBLIC_APP_URL` | — | URL del frontend para el enlace de seguimiento en los correos |
 | `CORS_ORIGINS` | `http://localhost:3000` | Orígenes del frontend |
