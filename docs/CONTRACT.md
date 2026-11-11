@@ -145,10 +145,11 @@ Funcionarios: cabecera `X-Staff-Key` (variable `STAFF_API_KEY`). Si la variable 
 { "id": "uuid", "radicado": "PQRSD-2025-000123", "receivedAt": "ISO", "excerpt": "primeros 160 caracteres",
   "status": "pending_review", "type": {"id","label"}, "dependency": {"id","name"}, "urgency": {"id","label"},
   "priorityScore": 72.4, "needsReview": true, "dueDate": "YYYY-MM-DD", "businessDaysLeft": 9, "slaStatus": "on_time",
-  "source": "ai", "isDemo": false }
+  "source": "ai", "isDemo": false, "assignee": "María Gómez" | null, "extended": false }
 ```
 `type/dependency/urgency` son los **efectivos** (los corregidos por el funcionario si existen).
-**PqrsdDetail** = `PqrsdSummary` + `text`, `channel`, `citizen|null`, `classification` (lo que dijo la IA: `type`, `dependency`, `urgency`, `subtype`, `entities`, `reviewReasons`, `modelVersion`, `source`), `effective` (`type`, `subtype`, `dependency`, `urgency`), `deadline` (`legalDays`, `basis`, `verify`, `dueDate`), `timeline:[{at,event,by,detail?}]`, `response|null`.
+**PqrsdDetail** = `PqrsdSummary` + `text`, `channel`, `citizen|null`, `classification` (lo que dijo la IA: `type`, `dependency`, `urgency`, `subtype`, `entities`, `reviewReasons`, `modelVersion`, `source`), `effective` (`type`, `subtype`, `dependency`, `urgency`), `deadline` (`legalDays`, `basis`, `verify`, `dueDate` — ya incluye la ampliación), `extension: {days, reason, at, originalDueDate} | null`, `timeline:[{at,event,by,detail?}]`, `response|null`.
+Eventos de `timeline`: `received`, `classified`, `confirmed`, `reclassified`, `assigned`, `extended`, `answered`, `closed`. El tracking público muestra la ampliación con su etiqueta, **nunca** el motivo interno ni el responsable.
 
 **Stats**: `{ totals:{all, open, pending_review, overdue, atRisk, needsReview}, byType, byDependency, byUrgency, avgPriority, avgBusinessDaysToAnswer, onTimeRate, aiAgreementRate, aiAvailable }`.
 `aiAgreementRate` = proporción de casos revisados donde el funcionario **no** cambió tipo, dependencia ni urgencia (indicador de calidad real de la IA).
