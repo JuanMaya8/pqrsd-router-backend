@@ -30,6 +30,8 @@ export class CoreModule {
       deadlineConfig: { ...DEFAULT_DEADLINE_CONFIG, denunciaDays: config.denunciaDays },
       autoAssignMinConfidence: config.autoAssignMinConfidence,
       feedbackOnConfirm: config.feedbackOnConfirm,
+      notifier: infra.notifier,
+      publicAppUrl: config.publicAppUrl,
     });
     const providers = [
       { provide: TOKENS.CONFIG, useValue: config },
