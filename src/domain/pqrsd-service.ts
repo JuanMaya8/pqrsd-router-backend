@@ -252,7 +252,7 @@ export class PqrsdService {
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'answer');
     rec.response = { text: response, answeredAt: this.d.clock.now().toISOString() };
-    this.event(rec, 'answered', 'staff');
+    this.event(rec, 'answered', 'staff', undefined, actor);
     await this.d.repo.update(rec);
     this.notify(rec, 'answered');
     return this.emitUpdated(rec);
