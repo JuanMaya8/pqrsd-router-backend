@@ -116,6 +116,7 @@ export interface PqrsdRecord {
   /** staff member in charge (free text, e.g. «María Gómez»). Optional: records stored before this field existed lack it. */
   assignee?: string | null;
   extension?: Extension | null;
+  transfer?: Transfer | null;
 }
 
 export interface Page<T> {
