@@ -251,6 +251,7 @@ export class PqrsdService {
     rec.response = { text: response, answeredAt: this.d.clock.now().toISOString() };
     this.event(rec, 'answered', 'staff');
     await this.d.repo.update(rec);
+    this.notify(rec, 'answered');
     return this.emitUpdated(rec);
   }
 
