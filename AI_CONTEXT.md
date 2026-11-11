@@ -34,7 +34,11 @@ Invariantes que NO se deben romper:
 * **Privacidad**: lo público (`tracking`, `transparency`, CSV, eventos socket) no lleva texto ni datos personales; `tracking` responde el **mismo 404** si el radicado no existe
   o el código es incorrecto. El feedback a la IA pasa por `redactPii` + `scrubCitizen`. No añadas campos a esas vistas sin revisar esto.
 * Los casos `isDemo` **nunca** se envían a la IA como feedback.
-* `PqrsdRepository.reserve(year, n)` reserva rangos del contador con escrituras serializadas; el contador nunca debe quedar por detrás de los radicados en disco.
+* `PqrsdRepository.reserve(year, n)` reserva rangos del contador (archivos: escrituras serializadas; PostgreSQL: un UPSERT atómico); el contador nunca debe quedar por detrás de los radicados guardados.
+* El dominio tampoco importa `pg` ni `nodemailer`: depende de `SqlClient` y `Notifier`; las implementaciones viven en `src/infra/` y se eligen en `app.factory.ts`.
+* Migraciones: se **añaden** al final de `MIGRATIONS` (`pg-repository.ts`); nunca edites una ya aplicada. `migrate()` necesita **una** conexión (no el pool).
+* **Ampliación del plazo** (Art. 14 parágrafo): una sola vez, antes del vencimiento, `days ≤ legalDays`; reclasificar la conserva acotada al nuevo término.
+  El tracking público muestra que se amplió, **nunca** el motivo ni el responsable. Los correos nunca salen para casos `isDemo` y un fallo de SMTP no rompe la petición.
 * `STAFF_API_KEY` es obligatoria con `NODE_ENV=production` (`main.ts` se niega a arrancar sin ella) y protege **también las lecturas** de `/staff/*`.
 
 ## 4. Cómo ejecutar y probar
