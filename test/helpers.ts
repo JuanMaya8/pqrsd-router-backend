@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import {
   AiClient, BlobPqrsdRepository, ClassificationService, EventBus, FakeClock, FileBlobStore, MemoryBlobStore, PqrsdService, TaxonomyProvider,
   DEFAULT_TAXONOMY, DEFAULT_DEADLINE_CONFIG,
-  type AiClassification, type BlobStore, type FetchLike, type Entity, type PqrsdRepository,
+  type AiClassification, type BlobStore, type FetchLike, type Entity, type Notifier, type PqrsdRepository,
 } from '../src/domain';
 
 function reply(status: number, json: unknown) {
