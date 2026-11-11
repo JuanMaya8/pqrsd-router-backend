@@ -192,5 +192,5 @@ Eventos servidor→cliente (sin datos personales):
 | `/transparencia` | **ISR** (`revalidate = 60`) | Datos públicos agregados que cambian poco; sirve desde caché y se regenera cada minuto |
 | `/funcionario` | **CSR** + socket.io | Bandeja en vivo con filtros, semáforo SLA y panel de métricas |
 
-Variables: `NEXT_PUBLIC_API_URL` (navegador), `API_URL_INTERNAL` (servidor Next → backend en Docker), `NEXT_PUBLIC_SOCKET_URL`.
+Variables: `NEXT_PUBLIC_API_URL` (navegador), `API_URL_INTERNAL` (servidor Next → backend en Docker), `NEXT_PUBLIC_SOCKET_URL`, `NEXT_PUBLIC_SITE_URL` (sitemap).
 La clave de funcionario se guarda solo en `sessionStorage` del navegador y se envía en `X-Staff-Key`.
