@@ -118,7 +118,7 @@ Funcionarios: cabecera `X-Staff-Key` (variable `STAFF_API_KEY`). Si la variable 
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET  | `/staff/pqrsd` | Bandeja. Filtros: `status`, `type`, `dependency`, `urgency`, `sla`, `needsReview=true`, `q` (texto), `isDemo`; `sort=priority:desc` (default: `priorityScore` + 20 si está vencida + 8 si está en riesgo; las respondidas y cerradas van siempre al final) \| `dueDate:asc` \| `receivedAt:desc`; `limit` ≤ 200 (default 50), `offset` → `{items: PqrsdSummary[], total}` |
+| GET  | `/staff/pqrsd` | Bandeja. Filtros: `status`, `type`, `dependency`, `urgency`, `sla`, `needsReview=true`, `assignee` (nombre exacto, sin distinguir tildes ni mayúsculas), `unassigned=true`, `q` (texto), `isDemo`; `sort=priority:desc` (default: `priorityScore` + 20 si está vencida + 8 si está en riesgo; las respondidas y cerradas van siempre al final) \| `dueDate:asc` \| `receivedAt:desc`; `limit` ≤ 200 (default 50), `offset` → `{items: PqrsdSummary[], total}` |
 | GET  | `/staff/pqrsd/{id}` | `PqrsdDetail` (incluye texto, ciudadano, entidades, justificaciones de la IA y línea de tiempo) |
 | POST | `/staff/pqrsd/{id}/confirm` | Acepta la clasificación de la IA → `assigned` (opcional `{note}`) |
 | POST | `/staff/pqrsd/{id}/reclassify` | `{type?, subtype?, dependency?, urgency?, note?}` corrige y pasa a `assigned`; si cambia algo, envía retroalimentación a la IA y recalcula plazo |
