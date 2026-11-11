@@ -49,8 +49,8 @@ export class StaffController {
   @Post('pqrsd/:id/assign')
   @HttpCode(200)
   @ApiOperation({ summary: 'Asigna un funcionario responsable (assignee: null quita la asignación)' })
-  assign(@Param('id') id: string, @Body() body: AssignDoc) {
-    return this.service.assign(id, body);
+  assign(@Param('id') id: string, @Body() body: AssignDoc, @StaffName() actor: string) {
+    return this.service.assign(id, body, actor);
   }
 
   @Post('pqrsd/:id/extend')
