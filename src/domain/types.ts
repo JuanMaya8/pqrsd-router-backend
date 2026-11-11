@@ -83,6 +83,17 @@ export interface Extension {
   originalDueDate: string;
 }
 
+/**
+ * Transfer to the competent authority (Art. 21, Ley 1437 de 2011): within 5 business days of receipt the entity forwards the request
+ * and sends the citizen a copy of the transfer letter. The case is closed here; `late` records that the 5 days had already passed.
+ */
+export interface Transfer {
+  entity: string;
+  reason: string;
+  at: string;
+  late: boolean;
+}
+
 export interface PqrsdRecord {
   id: string;
   radicado: string;
