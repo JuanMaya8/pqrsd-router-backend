@@ -166,6 +166,7 @@ export interface PqrsdDetail extends PqrsdSummary {
   effective: Effective;
   deadline: Deadline;
   extension: Extension | null;
+  transfer: Transfer | null;
   timeline: TimelineEvent[];
   response: { text: string; answeredAt: string } | null;
 }
