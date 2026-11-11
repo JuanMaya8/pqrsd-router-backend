@@ -72,6 +72,22 @@ test('staff routes need X-Staff-Key (reads too: they contain personal data)', as
   await request(base).get(`${API}/staff/pqrsd`).set(KEY).expect(200);
 });
 
+test('named staff accounts: /staff/me, the actor in the history and transfer (Art. 21)', async () => {
+  const ANA = { 'X-Staff-Key': 'clave-ana-1' };
+  assert.equal((await request(base).get(`${API}/staff/me`).set(ANA).expect(200)).body.name, 'Ana Pérez');
+  assert.equal((await request(base).get(`${API}/staff/me`).set(KEY).expect(200)).body.name, 'Funcionario');
+  await request(base).get(`${API}/staff/me`).expect(401);
+  const r = await request(base).post(`${API}/pqrsd`).send(create()).expect(201);
+  const id = (await request(base).get(`${API}/staff/pqrsd`).query({ q: r.body.radicado }).set(ANA).expect(200)).body.items[0].id;
+  const reason = 'El asunto lo vigila la Superintendencia, no esta entidad.';
+  const d = await request(base).post(`${API}/staff/pqrsd/${id}/transfer`).set(ANA).send({ entity: 'Superintendencia de Servicios Públicos', reason }).expect(200);
+  assert.equal(d.body.status, 'closed');
+  assert.equal(d.body.timeline.at(-1).actor, 'Ana Pérez');
+  const t = await request(base).get(`${API}/public/tracking/${r.body.radicado}`).query({ code: r.body.trackingCode }).expect(200);
+  assert.equal(t.body.transfer.entity, 'Superintendencia de Servicios Públicos');
+  assert.ok(!JSON.stringify(t.body).includes('Ana Pérez'));
+});
+
 test('staff workflow over HTTP: list → detail → reclassify → answer → close, plus csv', async () => {
   const r = await request(base).post(`${API}/pqrsd`).send(create({ text: 'Solicito copia del contrato de obra del parque del barrio Santa Lucía.' })).expect(201);
   const list = await request(base).get(`${API}/staff/pqrsd`).set(KEY).query({ q: 'contrato', sort: 'receivedAt:desc' }).expect(200);
