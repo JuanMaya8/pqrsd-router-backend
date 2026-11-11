@@ -21,7 +21,7 @@ cp .env.example .env              # opcional; ver la tabla de variables
 npm run start:dev                 # http://localhost:3001/api/v1   ·   Swagger: http://localhost:3001/docs
 
 npm run typecheck && npm test     # 51 pruebas del dominio (no necesitan Nest ni red)
-npm run test:http                 # pruebas HTTP/WebSocket con Nest real y una IA falsa (ver «Qué está hecho»)
+npm run test:http                 # pruebas HTTP/WebSocket con Nest real y una IA falsa
 npm run build && npm start        # producción (NODE_ENV=production exige STAFF_API_KEY)
 ```
 
