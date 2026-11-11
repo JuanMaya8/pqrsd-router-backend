@@ -12,6 +12,9 @@ También asigna un **funcionario responsable**, gestiona la **ampliación del pl
 
 > **Estado: avance funcional (v0.1.0)**, no el proyecto terminado. Lee *Qué está hecho y qué no*.
 
+> **Para la entrega:** la guía de demostración (cómo levantar todo con una orden, claves de prueba y recorrido de 10 minutos) está en
+> [`pqrsd-router-frontend/docs/GUIA_DEMO.md`](https://github.com/JuanMaya8/pqrsd-router-frontend/blob/main/docs/GUIA_DEMO.md).
+
 ## Cómo ejecutarlo
 
 Requisitos: **Node 18.18+** (probado con Node 22 en el sandbox) y, para clasificar de verdad, `pqrsd-router-ai` corriendo en `:8000`
