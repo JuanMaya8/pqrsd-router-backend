@@ -17,6 +17,15 @@ export interface AppConfig {
   feedbackOnConfirm: boolean;
   /** Express «trust proxy» hops (set 1 behind one reverse proxy so rate limiting sees the real client IP) */
   trustProxy: number;
+  /** PostgreSQL connection string. Empty = one JSON file per case under dataDir (development / single instance). */
+  databaseUrl?: string;
+  /** true for providers that require TLS from outside their network (Render external URL, Neon, Supabase…) */
+  databaseSsl: boolean;
+  /** smtp://user:pass@host:587 or smtps://…:465. Empty = citizen e-mails are not sent. */
+  smtpUrl?: string;
+  mailFrom: string;
+  /** Public URL of the frontend, used for the tracking link in e-mails (e.g. https://pqrsd.vercel.app) */
+  publicAppUrl?: string;
   version: string;
 }
 
