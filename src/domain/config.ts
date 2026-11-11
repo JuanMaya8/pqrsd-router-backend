@@ -42,6 +42,7 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     port: num(env.PORT, 3001, 1),
     nodeEnv: env.NODE_ENV || 'development',
     staffKey: env.STAFF_API_KEY || undefined,
+    staffUsers: parseStaffUsers(env.STAFF_USERS),
     aiUrl: env.AI_URL || 'http://localhost:8000',
     aiApiKey: env.AI_API_KEY || undefined,
     aiTimeoutMs: num(env.AI_TIMEOUT_MS, 8000, 1),
