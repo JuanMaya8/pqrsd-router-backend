@@ -77,8 +77,8 @@ export class StaffController {
   @Post('pqrsd/:id/close')
   @HttpCode(200)
   @ApiOperation({ summary: 'Cierra una PQRSD respondida' })
-  close(@Param('id') id: string) {
-    return this.service.close(id);
+  close(@Param('id') id: string, @StaffName() actor: string) {
+    return this.service.close(id, actor);
   }
 
   @Get('stats')
