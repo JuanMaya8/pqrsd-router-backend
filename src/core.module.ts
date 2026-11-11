@@ -35,6 +35,7 @@ export class CoreModule {
     });
     const providers = [
       { provide: TOKENS.CONFIG, useValue: config },
+      { provide: TOKENS.STORE, useValue: infra.store ?? (infra.repo ? 'postgres' : 'file') },
       { provide: TOKENS.EVENTS, useValue: events },
       { provide: TOKENS.SERVICE, useValue: service },
       { provide: TOKENS.LIMITER, useValue: new RateLimiter(config.publicWriteLimit, 60_000, systemClock) },
