@@ -200,7 +200,7 @@ export class PqrsdService {
     return detail;
   }
 
-  async confirm(id: string, raw: unknown): Promise<PqrsdDetail> {
+  async confirm(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
     const { note } = parseNote(raw);
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'confirm');
