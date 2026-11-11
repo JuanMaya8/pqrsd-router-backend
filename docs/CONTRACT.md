@@ -122,6 +122,8 @@ Funcionarios: cabecera `X-Staff-Key` (variable `STAFF_API_KEY`). Si la variable 
 | GET  | `/staff/pqrsd/{id}` | `PqrsdDetail` (incluye texto, ciudadano, entidades, justificaciones de la IA y línea de tiempo) |
 | POST | `/staff/pqrsd/{id}/confirm` | Acepta la clasificación de la IA → `assigned` (opcional `{note}`) |
 | POST | `/staff/pqrsd/{id}/reclassify` | `{type?, subtype?, dependency?, urgency?, note?}` corrige y pasa a `assigned`; si cambia algo, envía retroalimentación a la IA y recalcula plazo |
+| POST | `/staff/pqrsd/{id}/assign` | `{assignee: string(3–120) \| null, note?}` funcionario responsable (`null` lo quita) → `assigned` |
+| POST | `/staff/pqrsd/{id}/extend` | `{days: 1…legalDays, reason: string(20–1000)}` amplía el plazo **una vez**, antes del vencimiento, hasta el doble del término inicial (Art. 14 parágrafo, Ley 1437). 409 `EXTENSION_NOT_ALLOWED` si ya se amplió, venció o está respondida |
 | POST | `/staff/pqrsd/{id}/answer` | `{response: string(10–5000)}` → `answered` |
 | POST | `/staff/pqrsd/{id}/close` | → `closed` (solo desde `answered`) |
 | GET  | `/staff/stats` | KPIs de la bandeja (abajo) |
