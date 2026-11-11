@@ -30,6 +30,8 @@ El blueprint [`render.yaml`](../render.yaml) crea los tres recursos de Render. E
    Comprueba: `https://pqrsd-router-backend.onrender.com/api/v1/health` → `"store":"postgres"` y `"ai":{"available":true,…}`.
 4. Cuando tengas el dominio de Vercel, actualiza `CORS_ORIGINS` y `PUBLIC_APP_URL` del backend (Environment → Save → se redepliega solo).
 5. La clave de funcionario es `STAFF_API_KEY` del backend (Render la genera): cópiala de *Environment* y escríbela en `/funcionario`.
+   Opcional: agrega `STAFF_USERS` = `Ana Pérez:clave-de-ana,Luis Ruiz:clave-de-luis` (claves de 8+ caracteres) para que cada funcionario entre
+   con su propia clave y su nombre quede en el historial de cada caso («Asignarme» usa ese nombre).
 
 Generadas automáticamente: `STAFF_API_KEY`, `AI_API_KEY` (la misma en la IA y en el backend), `DATABASE_URL` (URL interna de Render, sin TLS).
 
