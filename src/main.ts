@@ -5,8 +5,8 @@ import { loadConfig } from './domain';
 
 async function bootstrap(): Promise<void> {
   const config = loadConfig();
-  if (config.nodeEnv === 'production' && !config.staffKey) {
-    throw new Error('STAFF_API_KEY es obligatoria en producción: sin ella cualquiera podría leer los datos personales de la bandeja.');
+  if (config.nodeEnv === 'production' && !config.staffKey && config.staffUsers.length === 0) {
+    throw new Error('STAFF_API_KEY o STAFF_USERS es obligatoria en producción: sin ella cualquiera podría leer los datos personales de la bandeja.');
   }
   const app = await buildApp(config);
   await app.listen(config.port, '0.0.0.0');
