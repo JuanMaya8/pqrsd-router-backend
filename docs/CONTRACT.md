@@ -111,7 +111,7 @@ Funcionarios: cabecera `X-Staff-Key`. Vale la clave compartida (`STAFF_API_KEY`,
 
 **Receipt** `{ "radicado": "PQRSD-2025-000123", "trackingCode": "K7M2QX", "receivedAt": "ISO", "type": {"id","label"}, "dependency": {"id","name"}, "dueDate": "YYYY-MM-DD", "legalDays": 15, "message": "<español>" }`
 
-**Tracking (público)**: `{ radicado, status, statusLabel, type, dependency, urgency, receivedAt, dueDate, slaStatus, businessDaysLeft, timeline:[{at,event,label}], response: {text, answeredAt} | null }`. Nunca incluye texto original, ciudadano ni entidades.
+**Tracking (público)**: `{ radicado, status, statusLabel, type, dependency, urgency, receivedAt, dueDate, slaStatus, businessDaysLeft, timeline:[{at,event,label}], transfer: {entity, at} | null, response: {text, answeredAt} | null }`. Nunca incluye texto original, ciudadano ni entidades.
 
 **Transparency**: `{ generatedAt, includesDemo, totals:{received, answered, open, overdue}, onTimeRate, avgBusinessDaysToAnswer, byType:[{id,label,count}], byDependency:[{id,name,count,openCount,overdueCount}], weekly:[{weekStart,received,answered}], deadlines:[{type,subtype?,legalDays,basis}] }`.
 
