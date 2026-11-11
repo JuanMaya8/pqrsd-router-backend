@@ -218,6 +218,11 @@ export function parseListQuery(raw: Record<string, unknown>): ListQuery {
   };
   q.needsReview = bool('needsReview');
   q.isDemo = bool('isDemo');
+  if (raw.unassigned === 'true') q.assignee = '';
+  else {
+    const who = s('assignee');
+    if (who !== undefined) (who.length <= 120 ? (q.assignee = who.trim()) : errors.push('«assignee» admite máximo 120 caracteres.'));
+  }
   const text = s('q');
   if (text) q.q = text.slice(0, 100);
   const sort = s('sort');
