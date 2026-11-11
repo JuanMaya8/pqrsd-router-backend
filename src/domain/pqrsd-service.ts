@@ -232,6 +232,11 @@ export class PqrsdService {
     rec.priorityScore = next.urgency === c.urgency.id ? c.urgency.priorityScore : URGENCY_PRIORITY[next.urgency];
     // the legal term depends on the type/subtype and always counts from the ORIGINAL receipt date
     rec.deadline = computeDeadline(bogotaDate(rec.receivedAt), next.type, next.subtype, this.d.deadlineConfig);
+    if (rec.extension) {
+      // an extension already granted is kept on top of the recomputed term (and still capped at that term)
+      rec.extension = { ...rec.extension, days: Math.min(rec.extension.days, rec.deadline.legalDays), originalDueDate: rec.deadline.dueDate };
+      rec.deadline = { ...rec.deadline, dueDate: addBusinessDays(rec.deadline.dueDate, rec.extension.days) };
+    }
     rec.reviewed = true;
     this.event(rec, 'reclassified', 'staff', [changes.join('; '), input.note].filter(Boolean).join(' — ') || undefined);
     await this.d.repo.update(rec);
