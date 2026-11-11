@@ -101,7 +101,7 @@ export function harness(
   const ai = new FakeAi();
   const clock = new FakeClock(new Date(T0));
   const store = opts.store ?? new MemoryBlobStore();
-  const repo = new BlobPqrsdRepository(store);
+  const repo = opts.repo ?? new BlobPqrsdRepository(store);
   const events = new EventBus();
   const log: Array<{ event: string; payload: any }> = [];
   events.subscribe((event, payload) => log.push({ event, payload }));
