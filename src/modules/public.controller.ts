@@ -19,7 +19,7 @@ export class PublicController {
   @ApiOperation({ summary: 'Estado del backend y de la IA' })
   async health() {
     const ai = await this.service.health();
-    return { status: 'ok' as const, version: this.config.version, ai, store: 'file' as const };
+    return { status: 'ok' as const, version: this.config.version, ai, store: this.store, notifications: this.service.notificationsEnabled() };
   }
 
   @Post('pqrsd/preview')
