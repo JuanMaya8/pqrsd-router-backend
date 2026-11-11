@@ -1,3 +1,5 @@
+import { parseStaffUsers, type StaffUser } from './staff-users';
+
 export interface AppConfig {
   port: number;
   nodeEnv: string;
