@@ -77,7 +77,10 @@ const dateEs = (d: DateStr): string => new Date(`${d}T00:00:00Z`).toLocaleDateSt
 
 export class PqrsdService {
   private readonly inFlight = new Set<Promise<unknown>>();
-  constructor(private readonly d: ServiceDeps) {}
+  private readonly notifier: Notifier;
+  constructor(private readonly d: ServiceDeps) {
+    this.notifier = d.notifier ?? new NullNotifier();
+  }
 
   /** Resolves when background work (AI feedback) is done. Used by tests and on shutdown. */
   async idle(): Promise<void> {
