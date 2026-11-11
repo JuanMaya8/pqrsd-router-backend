@@ -1,12 +1,7 @@
-# Render Blueprint: backend (NestJS) + AI (FastAPI) + PostgreSQL. Frontend goes to Vercel (see docs/DEPLOY.md).
-# Render → New → Blueprint → pick this repo. Values marked `sync: false` are asked for on the first deploy.
-# Free plans: services sleep after ~15 min idle (first request takes ~1 min) and the free database expires after 30 days.
-
-databases:
-  - name: pqrsd-db
-    plan: free
-    databaseName: pqrsd
-    user: pqrsd
+# Render Blueprint: backend (NestJS) + AI (FastAPI). Database: Neon (PostgreSQL). Frontend: Vercel. See docs/DEPLOY.md.
+# Render → New → Blueprint → pick this repo. Values marked `sync: false` are asked for on the first deploy
+# (DATABASE_URL: the SAME Neon URL in both services; the backend uses tables pq_*, the AI uses ai_feedback).
+# Free plans: services sleep after ~15 min idle (first request takes ~1 min). Neon free does not expire.
 
 services:
   - type: web
