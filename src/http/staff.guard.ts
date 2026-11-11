@@ -1,16 +1,16 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
-import { timingSafeEqual } from 'node:crypto';
-import { UnauthorizedError, type AppConfig } from '../domain';
+import { CanActivate, ExecutionContext, Inject, Injectable, createParamDecorator } from '@nestjs/common';
+import { UnauthorizedError, resolveStaff, type AppConfig } from '../domain';
 import { TOKENS } from '../tokens';
 
-export function staffKeyMatches(expected: string | undefined, sent: unknown): boolean {
-  if (!expected) return true; // development mode (main.ts refuses to boot in production without a key)
-  const a = Buffer.from(typeof sent === 'string' ? sent : '');
-  const b = Buffer.from(expected);
-  return a.length === b.length && timingSafeEqual(a, b);
+interface StaffRequest {
+  headers: Record<string, string | string[] | undefined>;
+  staffName?: string;
 }
 
-/** Every route of the staff controller requires `X-Staff-Key` (when STAFF_API_KEY is set). GET included: the data is personal. */
+/**
+ * Every route of the staff controller requires `X-Staff-Key`: the shared STAFF_API_KEY or one of STAFF_USERS. GET included: the data is
+ * personal. The resolved name is kept on the request for the case history (see `@StaffName()`).
+ */
 @Injectable()
 export class StaffGuard implements CanActivate {
   constructor(@Inject(TOKENS.CONFIG) private readonly config: AppConfig) {}
