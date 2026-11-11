@@ -56,7 +56,7 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     feedbackOnConfirm: env.FEEDBACK_ON_CONFIRM === 'true',
     trustProxy: Math.round(num(env.TRUST_PROXY, 0)),
     databaseUrl: env.DATABASE_URL || undefined,
-    databaseSsl: env.DATABASE_SSL === 'true',
+    databaseSsl: env.DATABASE_SSL === 'true' || /[?&]sslmode=(require|verify-ca|verify-full)\b/.test(env.DATABASE_URL ?? '') || /\.neon\.tech\b/.test(env.DATABASE_URL ?? ''),
     smtpUrl: env.SMTP_URL || undefined,
     mailFrom: env.MAIL_FROM || 'PQRSD <no-reply@localhost>',
     publicAppUrl: env.PUBLIC_APP_URL ? env.PUBLIC_APP_URL.replace(/\/$/, '') : undefined,
