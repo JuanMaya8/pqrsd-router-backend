@@ -4,4 +4,6 @@ export const TOKENS = {
   EVENTS: 'PQ_EVENTS',
   SERVICE: 'PQ_SERVICE',
   LIMITER: 'PQ_LIMITER',
+  /** 'postgres' | 'file', reported by /health */
+  STORE: 'PQ_STORE',
 } as const;
