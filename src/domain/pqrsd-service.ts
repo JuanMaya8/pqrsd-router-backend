@@ -28,6 +28,10 @@ export interface ServiceDeps {
   /** 0 = off */
   autoAssignMinConfidence: number;
   feedbackOnConfirm: boolean;
+  /** citizen e-mails (receipt, extension, answer). Default: none sent. */
+  notifier?: Notifier;
+  /** frontend URL for the tracking link in e-mails */
+  publicAppUrl?: string;
 }
 
 /** Priority assigned when staff overrides the urgency (the AI's own score no longer applies). */
