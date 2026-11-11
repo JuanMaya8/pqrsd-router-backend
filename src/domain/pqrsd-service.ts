@@ -263,6 +263,70 @@ export class PqrsdService {
     return this.emitUpdated(rec);
   }
 
+  /** Puts a staff member in charge (or removes the assignment with null). Moves a case still in triage to «assigned». */
+  async assign(id: string, raw: unknown): Promise<PqrsdDetail> {
+    const { assignee, note } = parseAssign(raw);
+    const rec = await this.load(id);
+    rec.status = transition(rec.status, 'assign');
+    const before = rec.assignee ?? null;
+    rec.assignee = assignee;
+    rec.reviewed = true;
+    const what = assignee ? (before ? `${before} → ${assignee}` : `a cargo de ${assignee}`) : `sin responsable (antes: ${before ?? 'nadie'})`;
+    this.event(rec, 'assigned', 'staff', [what, note].filter(Boolean).join(' — '));
+    await this.d.repo.update(rec);
+    return this.emitUpdated(rec);
+  }
+
+  /**
+   * Extends the legal term (Art. 14 parágrafo, Ley 1437 de 2011): only for open cases, before the term expires, once,
+   * with a reason, and never beyond twice the initial term. The citizen is notified (when they left an e-mail).
+   */
+  async extend(id: string, raw: unknown): Promise<PqrsdDetail> {
+    const { days, reason } = parseExtend(raw);
+    const rec = await this.load(id);
+    const conflict = (msg: string) => new DomainError(409, 'EXTENSION_NOT_ALLOWED', msg);
+    if (!isOpen(rec.status)) throw conflict('Solo se puede ampliar el plazo de una solicitud que aún no ha sido respondida.');
+    if (rec.extension) throw conflict(`El plazo ya fue ampliado una vez (hasta el ${dateEs(rec.deadline.dueDate)}).`);
+    if (this.today() > rec.deadline.dueDate) throw conflict('El plazo ya venció: la ampliación debe informarse antes del vencimiento.');
+    if (days > rec.deadline.legalDays) throw new ValidationError([`La ampliación no puede superar el plazo inicial (${rec.deadline.legalDays} días hábiles): el total no puede exceder el doble.`]);
+    const originalDueDate = rec.deadline.dueDate;
+    rec.extension = { days, reason, at: this.d.clock.now().toISOString(), originalDueDate };
+    rec.deadline = { ...rec.deadline, dueDate: addBusinessDays(originalDueDate, days) };
+    this.event(rec, 'extended', 'staff', `${days} días hábiles: ${originalDueDate} → ${rec.deadline.dueDate}. ${reason}`);
+    await this.d.repo.update(rec);
+    this.notify(rec, 'extended');
+    return this.emitUpdated(rec);
+  }
+
+  /** Citizen e-mail in the background: never blocks or fails the request, never for demo cases or citizens without e-mail. */
+  private notify(rec: PqrsdRecord, kind: 'received' | 'extended' | 'answered'): void {
+    const to = rec.citizen?.email;
+    if (!to || rec.isDemo || !this.notifier.enabled) return;
+    const link = this.d.publicAppUrl ? `\n\nConsulta el estado en: ${this.d.publicAppUrl}/consulta/${rec.radicado}?code=${rec.trackingCode}` : '';
+    const greeting = rec.citizen?.name ? `Hola, ${rec.citizen.name}:` : 'Hola:';
+    const due = dateEs(rec.deadline.dueDate);
+    const messages: Record<typeof kind, { subject: string; text: string }> = {
+      received: {
+        subject: `Radicamos tu solicitud ${rec.radicado}`,
+        text: `${greeting}\n\nRecibimos tu solicitud con el número ${rec.radicado}. La entidad debe responderte a más tardar el ${due} (${rec.deadline.legalDays} días hábiles).\nTu código de seguimiento es ${rec.trackingCode}. Guárdalo: lo necesitas para consultar.`,
+      },
+      extended: {
+        subject: `Ampliamos el plazo de tu solicitud ${rec.radicado}`,
+        text: `${greeting}\n\nNo es posible responder tu solicitud ${rec.radicado} dentro del plazo inicial (${rec.extension ? dateEs(rec.extension.originalDueDate) : ''}).\nMotivo: ${rec.extension?.reason ?? ''}\nNueva fecha máxima de respuesta: ${due} (Art. 14, parágrafo, Ley 1437 de 2011).`,
+      },
+      answered: {
+        subject: `Respondimos tu solicitud ${rec.radicado}`,
+        text: `${greeting}\n\nLa entidad respondió tu solicitud ${rec.radicado}:\n\n${rec.response?.text ?? ''}`,
+      },
+    };
+    const m = messages[kind];
+    this.background(this.notifier.send({ to, subject: m.subject, text: m.text + link }));
+  }
+
+  notificationsEnabled(): boolean {
+    return this.notifier.enabled;
+  }
+
   /** Sends the human-corrected labels to the AI, with personal data redacted. Never blocks or fails the request. */
   private sendFeedback(rec: PqrsdRecord): void {
     if (rec.isDemo || this.d.classifier.aiLooksDown) return;
