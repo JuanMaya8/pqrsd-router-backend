@@ -7,6 +7,7 @@ const NEXT: Record<Action, { from: Status[]; to: Status }> = {
   confirm: { from: ['pending_review'], to: 'assigned' },
   reclassify: { from: ['pending_review', 'assigned'], to: 'assigned' },
   assign: { from: ['pending_review', 'assigned'], to: 'assigned' },
+  transfer: { from: ['pending_review', 'assigned'], to: 'closed' },
   answer: { from: ['pending_review', 'assigned'], to: 'answered' },
   close: { from: ['answered'], to: 'closed' },
 };
