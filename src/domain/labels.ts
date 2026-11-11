@@ -59,6 +59,7 @@ export const PUBLIC_EVENT_LABELS: Record<string, string> = {
   reclassified: 'Un funcionario revisó y reasignó tu solicitud',
   assigned: 'Un funcionario quedó a cargo de tu solicitud',
   extended: 'La entidad amplió el plazo de respuesta (Art. 14, parágrafo, Ley 1437 de 2011)',
+  transferred: 'La solicitud fue trasladada a la autoridad competente (Art. 21, Ley 1437 de 2011)',
   answered: 'La entidad respondió tu solicitud',
   closed: 'La solicitud fue cerrada',
 };
