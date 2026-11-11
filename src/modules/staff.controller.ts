@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Header, HttpCode, Inject, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { PqrsdService } from '../domain';
-import { AnswerDoc, AssignDoc, ExtendDoc, ImportDoc, NoteDoc, ReclassifyDoc, SeedDoc } from '../http/dto';
-import { StaffGuard } from '../http/staff.guard';
+import { AnswerDoc, AssignDoc, ExtendDoc, ImportDoc, NoteDoc, ReclassifyDoc, SeedDoc, TransferDoc } from '../http/dto';
+import { StaffGuard, StaffName } from '../http/staff.guard';
 import { TOKENS } from '../tokens';
 
 @ApiTags('funcionario')
