@@ -63,6 +63,8 @@ export interface TrackingView {
   slaLabel: string;
   businessDaysLeft: number;
   timeline: Array<{ at: string; event: string; label: string }>;
+  /** competent authority the request was forwarded to (Art. 21); the reason is in the response letter */
+  transfer: { entity: string; at: string } | null;
   response: { text: string; answeredAt: string } | null;
 }
 
