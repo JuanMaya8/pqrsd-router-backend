@@ -95,7 +95,9 @@ export interface Harness {
 /** Wednesday 2025-03-05 10:00 Bogotá (15:00Z). */
 export const T0 = '2025-03-05T15:00:00Z';
 
-export function harness(opts: { store?: BlobStore; autoAssignMinConfidence?: number; feedbackOnConfirm?: boolean; dir?: string } = {}): Harness {
+export function harness(
+  opts: { store?: BlobStore; repo?: PqrsdRepository; notifier?: Notifier; publicAppUrl?: string; autoAssignMinConfidence?: number; feedbackOnConfirm?: boolean; dir?: string } = {},
+): Harness {
   const ai = new FakeAi();
   const clock = new FakeClock(new Date(T0));
   const store = opts.store ?? new MemoryBlobStore();
