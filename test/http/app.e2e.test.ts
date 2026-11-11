@@ -96,6 +96,25 @@ test('staff workflow over HTTP: list → detail → reclassify → answer → cl
   await request(base).get(`${API}/staff/export.csv`).expect(401);
 });
 
+test('assign and extend over HTTP; health reports the store', async () => {
+  const health = await request(base).get(`${API}/health`).expect(200);
+  assert.equal(health.body.store, 'file');
+  assert.equal(health.body.notifications, false);
+  const r = await request(base).post(`${API}/pqrsd`).send(create({ text: 'Solicito información sobre el cobro del impuesto predial de mi casa.' })).expect(201);
+  const id = (await request(base).get(`${API}/staff/pqrsd`).set(KEY).query({ q: r.body.radicado }).expect(200)).body.items[0].id as string;
+  const a = await request(base).post(`${API}/staff/pqrsd/${id}/assign`).set(KEY).send({ assignee: 'María Gómez' }).expect(200);
+  assert.equal(a.body.assignee, 'María Gómez');
+  const mine = await request(base).get(`${API}/staff/pqrsd`).set(KEY).query({ assignee: 'María Gómez' }).expect(200);
+  assert.ok(mine.body.items.every((x: { assignee: string }) => x.assignee === 'María Gómez'));
+  const bad = await request(base).post(`${API}/staff/pqrsd/${id}/extend`).set(KEY).send({ days: 3, reason: 'corto' }).expect(400);
+  assert.equal(bad.body.code, 'VALIDATION_ERROR');
+  const e = await request(base).post(`${API}/staff/pqrsd/${id}/extend`).set(KEY).send({ days: 3, reason: 'Se necesita un concepto técnico de Hacienda.' }).expect(200);
+  assert.equal(e.body.extended, true);
+  const again = await request(base).post(`${API}/staff/pqrsd/${id}/extend`).set(KEY).send({ days: 3, reason: 'Se necesita un concepto técnico de Hacienda.' }).expect(409);
+  assert.equal(again.body.code, 'EXTENSION_NOT_ALLOWED');
+  await request(base).post(`${API}/staff/pqrsd/${id}/assign`).send({ assignee: 'Nadie' }).expect(401);
+});
+
 test('stats, transparency, demo seed/delete, AI admin', async () => {
   await request(base).post(`${API}/staff/demo/seed`).set(KEY).send({ count: 20 }).expect(200);
   const stats = await request(base).get(`${API}/staff/stats`).set(KEY).expect(200);
