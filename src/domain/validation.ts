@@ -112,6 +112,33 @@ export function parseAnswer(raw: unknown): { response: string } {
   return { response: r.trim() };
 }
 
+/** «assignee»: name of the staff member in charge; null or '' removes the assignment. */
+export function parseAssign(raw: unknown): { assignee: string | null; note?: string } {
+  const o = body(raw);
+  const errors: string[] = [];
+  let assignee: string | null = null;
+  if (o.assignee !== null && o.assignee !== '') {
+    if (typeof o.assignee !== 'string' || o.assignee.trim().length < 3 || o.assignee.trim().length > 120) errors.push('«assignee» debe ser un nombre de 3 a 120 caracteres (o null para quitar la asignación).');
+    else assignee = o.assignee.trim().replace(/\s+/g, ' ');
+  }
+  if (o.note !== undefined && (typeof o.note !== 'string' || o.note.length > 500)) errors.push('«note» debe ser texto de máximo 500 caracteres.');
+  if (errors.length) throw new ValidationError(errors);
+  return { assignee, ...(typeof o.note === 'string' && o.note.trim() ? { note: o.note.trim() } : {}) };
+}
+
+/** Art. 14 parágrafo: the reason is mandatory and the extension can never exceed the initial term (checked by the service). */
+export function parseExtend(raw: unknown): { days: number; reason: string } {
+  const o = body(raw);
+  const errors: string[] = [];
+  const days = Number(o.days);
+  if (!Number.isInteger(days) || days < 1) errors.push('«days» debe ser un número entero de días hábiles mayor que cero.');
+  const reason = typeof o.reason === 'string' ? o.reason.trim() : '';
+  if (reason.length < 20) errors.push('Explica el motivo de la ampliación (al menos 20 caracteres): la ley exige informarlo al ciudadano.');
+  if (reason.length > 1000) errors.push('El motivo no puede superar 1.000 caracteres.');
+  if (errors.length) throw new ValidationError(errors);
+  return { days, reason };
+}
+
 export interface ImportInput { items: Array<{ text: string; receivedAt?: string }>; isDemo: boolean }
 
 export function parseImport(raw: unknown): ImportInput {
