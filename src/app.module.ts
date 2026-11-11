@@ -12,10 +12,10 @@ import { StaffController } from './modules/staff.controller';
 
 @Module({})
 export class AppModule {
-  static register(config: AppConfig, fetchImpl?: FetchLike): DynamicModule {
+  static register(config: AppConfig, fetchImpl?: FetchLike, infra: Infra = {}): DynamicModule {
     return {
       module: AppModule,
-      imports: [CoreModule.register(config, fetchImpl), ThrottlerModule.forRoot([{ ttl: 60_000, limit: config.throttleLimit }])],
+      imports: [CoreModule.register(config, fetchImpl, infra), ThrottlerModule.forRoot([{ ttl: 60_000, limit: config.throttleLimit }])],
       controllers: [PublicController, StaffController],
       providers: [
         RealtimeGateway,
