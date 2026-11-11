@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { CoreModule } from './core.module';
+import { CoreModule, type Infra } from './core.module';
 import type { AppConfig, FetchLike } from './domain';
 import { AllExceptionsFilter } from './http/exceptions.filter';
 import { PublicWriteGuard } from './http/public-write.guard';
