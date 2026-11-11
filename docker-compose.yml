@@ -47,6 +47,7 @@ services:
     ports:
       - "3001:3001"
 volumes:
+  db-data:
   ai-models:
   ai-feedback:
   backend-data:
