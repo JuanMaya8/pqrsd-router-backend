@@ -167,6 +167,8 @@ Eventos de `timeline`: `received`, `classified`, `confirmed`, `reclassified`, `a
 El conteo empieza el **día hábil siguiente** a la radicación. Una radicación en sábado, domingo o festivo cuenta como recibida
 el siguiente día hábil. Festivos de Colombia (Ley 51 de 1983): fijos, trasladados al lunes y los dependientes de la Semana Santa.
 `slaStatus`: `overdue` si hoy > `dueDate`; `at_risk` si faltan ≤ 3 días hábiles; `done` si ya hay respuesta.
+**Ampliación** (Art. 14 parágrafo): `dueDate` nuevo = `dueDate` original + `days` hábiles, con `days ≤ legalDays`. Si se reclasifica después, se recalcula el término y se conserva la ampliación (acotada al nuevo término).
+**Notificaciones** (si `SMTP_URL` está configurada y el ciudadano dejó correo, nunca en casos `isDemo`): al radicar, al ampliar el plazo y al responder.
 **Estos plazos son una configuración técnica de referencia, no asesoría jurídica**: la entidad debe validarlos.
 
 ### 4.4 Tiempo real (socket.io)
