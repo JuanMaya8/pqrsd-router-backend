@@ -183,6 +183,8 @@ export interface ListQuery {
   sla?: SlaStatus;
   needsReview?: boolean;
   isDemo?: boolean;
+  /** exact name (case/accent-insensitive); '' = only unassigned cases */
+  assignee?: string;
   q?: string;
   sort: SortKey;
   limit: number;
