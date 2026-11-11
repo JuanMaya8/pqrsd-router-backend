@@ -84,6 +84,8 @@ Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-
   (`@StaffName()`), los métodos del servicio reciben `actor` y lo guardan en `timeline[].actor`. `GET /staff/me`. **Invariante: `actor` nunca sale en vistas públicas.**
 * `transfer` (Art. 21): `pending_review | assigned → closed`, el oficio remisorio queda en `response`, `transfer.late` si pasaron 5 días hábiles, correo al ciudadano.
 * `docker-compose.yml` trae claves de demo por defecto (solo demo local).
+* Despliegue con **Neon** (no la base de Render, que vence a los 30 días): `render.yaml` pide `DATABASE_URL` (`sync: false`, la misma en IA y backend);
+  `databaseSsl` se activa solo con `sslmode=require/verify-*` o host `*.neon.tech` (`test/config.test.ts`). La IA abre una conexión por operación.
 
 **No hecho:**
 * Filtros y paginación en SQL: `all()` sigue cargando todos los casos (también en PostgreSQL).
