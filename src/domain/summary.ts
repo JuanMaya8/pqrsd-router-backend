@@ -22,6 +22,8 @@ export function toSummary(r: PqrsdRecord, today: DateStr, tax: TaxonomyDto): Pqr
     slaStatus: sla.slaStatus,
     source: r.classification.source,
     isDemo: r.isDemo,
+    assignee: r.assignee ?? null,
+    extended: Boolean(r.extension),
   };
 }
 
