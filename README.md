@@ -7,6 +7,8 @@ Hace lo que no puede hacer ni la IA ni la pantalla: **radica** la solicitud (nú
 **clasifica al recibirla** (llamando a la IA), calcula el **plazo legal en días hábiles colombianos** (festivos, Ley Emiliani, Semana Santa),
 mantiene el **semáforo de vencimiento (SLA)**, gobierna el **flujo de estados**, calcula **indicadores**, transmite **eventos en tiempo real**
 y devuelve a la IA las **correcciones de los funcionarios** (sin datos personales) para que aprenda.
+También asigna un **funcionario responsable**, gestiona la **ampliación del plazo** (Art. 14 parágrafo, Ley 1437 de 2011), envía **correos al ciudadano**
+(radicación, ampliación y respuesta) y guarda los casos en **PostgreSQL** (o en archivos JSON en desarrollo).
 
 > **Estado: avance funcional (v0.1.0)**, no el proyecto terminado. Lee *Qué está hecho y qué no*.
 
