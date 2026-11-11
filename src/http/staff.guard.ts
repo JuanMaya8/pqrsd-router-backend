@@ -24,3 +24,6 @@ export class StaffGuard implements CanActivate {
     return true;
   }
 }
+
+/** Name of the staff member who made the request (set by StaffGuard). */
+export const StaffName = createParamDecorator((_: unknown, ctx: ExecutionContext): string | undefined => ctx.switchToHttp().getRequest<StaffRequest>().staffName);
