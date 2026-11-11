@@ -21,6 +21,7 @@ services:
     environment:
       MODELS_DIR: /data/models
       FEEDBACK_FILE: /data/feedback/feedback.jsonl
+      DATABASE_URL: postgresql://pqrsd:pqrsd@db:5432/pqrsd
       AI_API_KEY: ${AI_API_KEY:-}
     volumes:
       - ai-models:/data/models
