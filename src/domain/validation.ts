@@ -139,6 +139,19 @@ export function parseExtend(raw: unknown): { days: number; reason: string } {
   return { days, reason };
 }
 
+/** Art. 21: the competent authority and the reason are mandatory (they go in the transfer letter sent to the citizen). */
+export function parseTransfer(raw: unknown): { entity: string; reason: string } {
+  const o = body(raw);
+  const errors: string[] = [];
+  const entity = typeof o.entity === 'string' ? o.entity.trim().replace(/\s+/g, ' ') : '';
+  if (entity.length < 3 || entity.length > 200) errors.push('«entity» debe ser el nombre de la autoridad competente (3 a 200 caracteres).');
+  const reason = typeof o.reason === 'string' ? o.reason.trim() : '';
+  if (reason.length < 20) errors.push('Explica por qué la entidad no es competente (al menos 20 caracteres): se informa al ciudadano.');
+  if (reason.length > 1000) errors.push('El motivo no puede superar 1.000 caracteres.');
+  if (errors.length) throw new ValidationError(errors);
+  return { entity, reason };
+}
+
 export interface ImportInput { items: Array<{ text: string; receivedAt?: string }>; isDemo: boolean }
 
 export function parseImport(raw: unknown): ImportInput {
