@@ -247,7 +247,7 @@ export class PqrsdService {
     return this.emitUpdated(rec);
   }
 
-  async answer(id: string, raw: unknown): Promise<PqrsdDetail> {
+  async answer(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
     const { response } = parseAnswer(raw);
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'answer');
