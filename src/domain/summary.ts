@@ -37,6 +37,7 @@ export function toDetail(r: PqrsdRecord, today: DateStr, tax: TaxonomyDto): Pqrs
     classification: { source: c.source, type: c.type, dependency: c.dependency, urgency: c.urgency, subtype: c.subtype, entities: c.entities, reviewReasons: c.reviewReasons, modelVersion: c.modelVersion },
     effective: r.effective,
     deadline: r.deadline,
+    extension: r.extension ?? null,
     timeline: r.timeline,
     response: r.response,
   };
