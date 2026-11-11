@@ -189,8 +189,8 @@ export class PqrsdService {
     return toDetail(await this.load(id), this.today(), await this.d.taxonomy.get());
   }
 
-  private event(rec: PqrsdRecord, event: TimelineEvent['event'], by: TimelineEvent['by'], detail?: string): void {
-    rec.timeline.push({ at: this.d.clock.now().toISOString(), event, by, ...(detail ? { detail } : {}) });
+  private event(rec: PqrsdRecord, event: TimelineEvent['event'], by: TimelineEvent['by'], detail?: string, actor?: string): void {
+    rec.timeline.push({ at: this.d.clock.now().toISOString(), event, by, ...(actor ? { actor } : {}), ...(detail ? { detail } : {}) });
   }
 
   private async emitUpdated(rec: PqrsdRecord): Promise<PqrsdDetail> {
