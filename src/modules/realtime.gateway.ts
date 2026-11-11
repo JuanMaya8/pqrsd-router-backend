@@ -26,7 +26,8 @@ export class RealtimeGateway implements OnGatewayInit, OnGatewayConnection, OnMo
 
   handleConnection(client: Socket): void {
     const sent = (client.handshake.auth as { staffKey?: unknown } | undefined)?.staffKey;
-    const isStaff = this.config.staffKey ? staffKeyMatches(this.config.staffKey, sent) : this.config.nodeEnv !== 'production';
+    const configured = Boolean(this.config.staffKey) || this.config.staffUsers.length > 0;
+    const isStaff = configured ? resolveStaff(this.config, sent) !== null : this.config.nodeEnv !== 'production';
     void client.join(isStaff ? 'staff' : 'public');
   }
 
