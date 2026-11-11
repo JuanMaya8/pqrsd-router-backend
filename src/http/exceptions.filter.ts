@@ -23,6 +23,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
       res.status(400).json({ statusCode: 400, code: 'INVALID_JSON', message: 'El cuerpo no es un JSON válido.' });
       return;
     }
+    // Nest's RoutesResolver turns body-parser's SyntaxError into a BadRequestException before it reaches this filter.
+    if (exception instanceof SyntaxError || (exception instanceof HttpException && exception.getStatus() === 400 && /JSON/i.test(exception.message))) {
+      res.status(400).json({ statusCode: 400, code: 'INVALID_JSON', message: 'El cuerpo no es un JSON válido.' });
+      return;
+    }
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const code = status === 404 ? 'NOT_FOUND' : status === 429 ? 'TOO_MANY_REQUESTS' : `HTTP_${status}`;
