@@ -73,7 +73,6 @@ Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-
 * `package-lock.json` versionado (la CI usa `npm ci`).
 * Sin ejecutar: `scripts/import-github-issues.mjs` contra GitHub.
 
-**No hecho:**
 **Añadido y verificado (2026-11-11):**
 * `PgPqrsdRepository` + migraciones (`DATABASE_URL`, `DATABASE_SSL`); pruebas contra PostgreSQL 16 real (`TEST_DATABASE_URL`), incluida la concurrencia de `reserve` y el arranque de Nest dos veces sobre la misma base.
 * `assign` (responsable, texto libre) y `extend` (ampliación del plazo); `Notifier` + `SmtpNotifier` (`SMTP_URL`, `MAIL_FROM`, `PUBLIC_APP_URL`).
