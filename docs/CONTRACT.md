@@ -95,7 +95,7 @@ Funcionarios: cabecera `X-Staff-Key` (variable `STAFF_API_KEY`). Si la variable 
 | GET  | `/public/tracking/{radicado}?code=XXXXXX` | Estado público (404 si el código no coincide: no revela si el radicado existe) |
 | GET  | `/public/transparency` | Agregados sin datos personales |
 | GET  | `/meta/taxonomy` | Taxonomía para mostrar nombres y descripciones |
-| GET  | `/health` | `{status, version, ai:{available, modelVersion}, store}` |
+| GET  | `/health` | `{status, version, ai:{available, modelVersion}, store: "postgres"\|"file", notifications: boolean}` |
 
 **PreviewResult** `{ classification:{ source:"ai"|"fallback", type:{id,label,confidence,reasons}, dependency:{id,name,confidence,reasons}, urgency:{id,label,confidence,reasons}, subtype:{id,label}|null, needsReview, entities:[{type,label,text,value}] /* solo no personales */ }, deadline:{ legalDays, dueDate, basis } }`
 
