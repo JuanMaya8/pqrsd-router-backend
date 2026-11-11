@@ -63,7 +63,7 @@ export interface Deadline {
 
 export interface TimelineEvent {
   at: string;
-  event: 'received' | 'classified' | 'confirmed' | 'reclassified' | 'answered' | 'closed';
+  event: 'received' | 'classified' | 'confirmed' | 'reclassified' | 'assigned' | 'extended' | 'answered' | 'closed';
   by: 'citizen' | 'ai' | 'fallback' | 'staff' | 'system';
   detail?: string;
 }
