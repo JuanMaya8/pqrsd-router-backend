@@ -211,7 +211,7 @@ export class PqrsdService {
     return this.emitUpdated(rec);
   }
 
-  async reclassify(id: string, raw: unknown): Promise<PqrsdDetail> {
+  async reclassify(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
     const input = parseReclassify(raw);
     const rec = await this.load(id);
     const tax = await this.d.taxonomy.get();
