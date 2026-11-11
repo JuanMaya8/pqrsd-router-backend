@@ -3,7 +3,10 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import type { Infra } from './core.module';
 import type { AppConfig, FetchLike } from './domain';
+import { openDatabase } from './infra/database';
+import { SmtpNotifier } from './infra/smtp-notifier';
 
 /** Builds (but does not start) the Nest app. Used by main.ts and by the e2e tests. */
 export interface BuildOptions {
