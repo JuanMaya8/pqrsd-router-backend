@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Header, HttpCode, Inject, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import type { PqrsdService } from '../domain';
-import { AnswerDoc, ImportDoc, NoteDoc, ReclassifyDoc, SeedDoc } from '../http/dto';
+import { AnswerDoc, AssignDoc, ExtendDoc, ImportDoc, NoteDoc, ReclassifyDoc, SeedDoc } from '../http/dto';
 import { StaffGuard } from '../http/staff.guard';
 import { TOKENS } from '../tokens';
 
