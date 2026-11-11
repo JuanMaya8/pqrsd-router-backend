@@ -63,6 +63,7 @@ export function queryCases(records: PqrsdRecord[], q: ListQuery, today: DateStr,
     if (q.type && r.effective.type !== q.type) continue;
     if (q.dependency && r.effective.dependency !== q.dependency) continue;
     if (q.urgency && r.effective.urgency !== q.urgency) continue;
+    if (q.assignee !== undefined && (q.assignee === '' ? Boolean(r.assignee) : fold(r.assignee ?? '') !== fold(q.assignee))) continue;
     if (needle && !fold(r.text).includes(needle) && !fold(r.radicado).includes(needle)) continue;
     const s = toSummary(r, today, tax);
     if (q.sla && s.slaStatus !== q.sla) continue;
