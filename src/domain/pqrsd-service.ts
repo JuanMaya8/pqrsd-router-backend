@@ -267,7 +267,7 @@ export class PqrsdService {
   }
 
   /** Puts a staff member in charge (or removes the assignment with null). Moves a case still in triage to «assigned». */
-  async assign(id: string, raw: unknown): Promise<PqrsdDetail> {
+  async assign(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
     const { assignee, note } = parseAssign(raw);
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'assign');
