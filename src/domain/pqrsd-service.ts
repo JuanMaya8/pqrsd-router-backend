@@ -275,7 +275,7 @@ export class PqrsdService {
     rec.assignee = assignee;
     rec.reviewed = true;
     const what = assignee ? (before ? `${before} → ${assignee}` : `a cargo de ${assignee}`) : `sin responsable (antes: ${before ?? 'nadie'})`;
-    this.event(rec, 'assigned', 'staff', [what, note].filter(Boolean).join(' — '));
+    this.event(rec, 'assigned', 'staff', [what, note].filter(Boolean).join(' — '), actor);
     await this.d.repo.update(rec);
     return this.emitUpdated(rec);
   }
