@@ -13,6 +13,8 @@ export interface BuildOptions {
   fetchImpl?: FetchLike;
   /** false in tests run through tsx (esbuild emits no decorator metadata, which Swagger needs to infer property types) */
   swagger?: boolean;
+  /** overrides what would be built from the config (tests inject a MemoryNotifier, for example) */
+  infra?: Infra;
 }
 
 export async function buildApp(config: AppConfig, options: BuildOptions = {}): Promise<NestExpressApplication> {
