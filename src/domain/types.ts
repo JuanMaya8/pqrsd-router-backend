@@ -68,6 +68,19 @@ export interface TimelineEvent {
   detail?: string;
 }
 
+/**
+ * Extension of the legal term (Art. 14 parágrafo, Ley 1437 de 2011): before the term expires the entity informs the citizen of the
+ * reasons and the new date, which can never exceed twice the initial term. At most one per case.
+ */
+export interface Extension {
+  /** extra business days added to the original due date (1 … legalDays) */
+  days: number;
+  reason: string;
+  at: string;
+  /** due date before the extension (recomputed if staff reclassify later) */
+  originalDueDate: string;
+}
+
 export interface PqrsdRecord {
   id: string;
   radicado: string;
