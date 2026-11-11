@@ -8,7 +8,11 @@ import { TOKENS } from '../tokens';
 @ApiTags('ciudadano')
 @Controller()
 export class PublicController {
-  constructor(@Inject(TOKENS.SERVICE) private readonly service: PqrsdService, @Inject(TOKENS.CONFIG) private readonly config: AppConfig) {}
+  constructor(
+    @Inject(TOKENS.SERVICE) private readonly service: PqrsdService,
+    @Inject(TOKENS.CONFIG) private readonly config: AppConfig,
+    @Inject(TOKENS.STORE) private readonly store: 'postgres' | 'file',
+  ) {}
 
   @Get('health')
   @ApiTags('system')
