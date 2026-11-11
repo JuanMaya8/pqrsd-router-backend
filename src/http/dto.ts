@@ -58,3 +58,8 @@ export class ImportDoc {
 export class SeedDoc {
   @ApiPropertyOptional({ minimum: 1, maximum: 500, default: 60 }) count?: number;
 }
+
+export class TransferDoc {
+  @ApiProperty({ minLength: 3, maxLength: 200, example: 'Superintendencia de Servicios Públicos Domiciliarios' }) entity!: string;
+  @ApiProperty({ minLength: 20, maxLength: 1000, example: 'La facturación del servicio de energía la vigila la Superintendencia, no la alcaldía.' }) reason!: string;
+}
