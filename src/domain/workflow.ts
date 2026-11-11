@@ -1,7 +1,7 @@
 import { InvalidTransitionError } from './errors';
 import type { Status } from './types';
 
-export type Action = 'confirm' | 'reclassify' | 'answer' | 'close';
+export type Action = 'confirm' | 'reclassify' | 'assign' | 'answer' | 'close';
 
 const NEXT: Record<Action, { from: Status[]; to: Status }> = {
   confirm: { from: ['pending_review'], to: 'assigned' },
