@@ -284,7 +284,7 @@ export class PqrsdService {
    * Extends the legal term (Art. 14 parágrafo, Ley 1437 de 2011): only for open cases, before the term expires, once,
    * with a reason, and never beyond twice the initial term. The citizen is notified (when they left an e-mail).
    */
-  async extend(id: string, raw: unknown): Promise<PqrsdDetail> {
+  async extend(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
     const { days, reason } = parseExtend(raw);
     const rec = await this.load(id);
     const conflict = (msg: string) => new DomainError(409, 'EXTENSION_NOT_ALLOWED', msg);
