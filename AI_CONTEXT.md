@@ -42,7 +42,7 @@ Invariantes que NO se deben romper:
 npm install
 npm test                     # 51 pruebas del dominio (tsx --test)
 npm run typecheck
-npm run test:http            # Nest real + supertest + socket.io-client contra una IA falsa (NUNCA EJECUTADO, ver abajo)
+npm run test:http            # Nest real + supertest + socket.io-client contra una IA falsa (8 pruebas)
 npm run start:dev            # :3001, Swagger en /docs
 ```
 Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-03-05 10:00 Bogotá). `test/contract.test.ts` usa
