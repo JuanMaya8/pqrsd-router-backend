@@ -56,8 +56,15 @@ export class StaffController {
   @Post('pqrsd/:id/extend')
   @HttpCode(200)
   @ApiOperation({ summary: 'Amplía el plazo legal una vez, antes del vencimiento y hasta el doble del término inicial (Art. 14 parágrafo, Ley 1437)' })
-  extend(@Param('id') id: string, @Body() body: ExtendDoc) {
-    return this.service.extend(id, body);
+  extend(@Param('id') id: string, @Body() body: ExtendDoc, @StaffName() actor: string) {
+    return this.service.extend(id, body, actor);
+  }
+
+  @Post('pqrsd/:id/transfer')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Traslada por competencia a otra autoridad y cierra el caso (Art. 21, Ley 1437)' })
+  transfer(@Param('id') id: string, @Body() body: TransferDoc, @StaffName() actor: string) {
+    return this.service.transfer(id, body, actor);
   }
 
   @Post('pqrsd/:id/answer')
