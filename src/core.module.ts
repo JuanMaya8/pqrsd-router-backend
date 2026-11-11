@@ -17,7 +17,7 @@ export interface Infra {
 @Global()
 @Module({})
 export class CoreModule {
-  static register(config: AppConfig, fetchImpl?: FetchLike): DynamicModule {
+  static register(config: AppConfig, fetchImpl?: FetchLike, infra: Infra = {}): DynamicModule {
     const events = new EventBus();
     const ai = new AiClient({ baseUrl: config.aiUrl, apiKey: config.aiApiKey, timeoutMs: config.aiTimeoutMs, fetchImpl });
     const service = new PqrsdService({
