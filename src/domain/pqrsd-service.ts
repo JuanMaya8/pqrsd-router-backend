@@ -258,10 +258,10 @@ export class PqrsdService {
     return this.emitUpdated(rec);
   }
 
-  async close(id: string): Promise<PqrsdDetail> {
+  async close(id: string, actor?: string): Promise<PqrsdDetail> {
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'close');
-    this.event(rec, 'closed', 'staff');
+    this.event(rec, 'closed', 'staff', undefined, actor);
     await this.d.repo.update(rec);
     return this.emitUpdated(rec);
   }
