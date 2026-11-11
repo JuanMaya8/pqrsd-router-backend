@@ -17,8 +17,10 @@ export class StaffGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     if (context.getType() !== 'http') return true;
-    const req = context.switchToHttp().getRequest<{ headers: Record<string, string | string[] | undefined> }>();
-    if (!staffKeyMatches(this.config.staffKey, req.headers['x-staff-key'])) throw new UnauthorizedError();
+    const req = context.switchToHttp().getRequest<StaffRequest>();
+    const name = resolveStaff(this.config, req.headers['x-staff-key']);
+    if (!name) throw new UnauthorizedError();
+    req.staffName = name;
     return true;
   }
 }
