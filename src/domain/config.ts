@@ -23,7 +23,7 @@ export interface AppConfig {
   trustProxy: number;
   /** PostgreSQL connection string. Empty = one JSON file per case under dataDir (development / single instance). */
   databaseUrl?: string;
-  /** true for providers that require TLS from outside their network (Render external URL, Neon, Supabase…) */
+  /** TLS to the database: DATABASE_SSL=true, or automatic when the URL has sslmode=require/verify-* or is a Neon host */
   databaseSsl: boolean;
   /** smtp://user:pass@host:587 or smtps://…:465. Empty = citizen e-mails are not sent. */
   smtpUrl?: string;
