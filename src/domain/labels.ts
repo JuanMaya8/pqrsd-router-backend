@@ -57,6 +57,8 @@ export const PUBLIC_EVENT_LABELS: Record<string, string> = {
   classified: 'La solicitud fue clasificada y enviada a la dependencia',
   confirmed: 'Un funcionario revisó y asignó tu solicitud',
   reclassified: 'Un funcionario revisó y reasignó tu solicitud',
+  assigned: 'Un funcionario quedó a cargo de tu solicitud',
+  extended: 'La entidad amplió el plazo de respuesta (Art. 14, parágrafo, Ley 1437 de 2011)',
   answered: 'La entidad respondió tu solicitud',
   closed: 'La solicitud fue cerrada',
 };
