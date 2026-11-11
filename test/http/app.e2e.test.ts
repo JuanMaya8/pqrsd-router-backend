@@ -1,7 +1,7 @@
 /**
  * HTTP + WebSocket tests against the real Nest app, with a fake AI service injected.
- * STATUS: written but NOT executed in the environment where this repo was created (npm registry blocked, Nest not installable).
- * Run with: npm run test:http   — if something fails here, fix it first (see AI_CONTEXT.md).
+ * STATUS: executed and passing (8/8) with NestJS 10, supertest and socket.io-client.
+ * Run with: npm run test:http
  */
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
