@@ -12,6 +12,13 @@ import { TOKENS } from '../tokens';
 export class StaffController {
   constructor(@Inject(TOKENS.SERVICE) private readonly service: PqrsdService) {}
 
+  @Get('me')
+  @Header('Cache-Control', 'no-store')
+  @ApiOperation({ summary: 'Quién soy: nombre del funcionario según su clave (STAFF_USERS o la clave compartida)' })
+  me(@StaffName() name: string) {
+    return { name };
+  }
+
   @Get('pqrsd')
   @ApiOperation({ summary: 'Bandeja: filtros status, type, dependency, urgency, sla, needsReview, assignee, unassigned, q, isDemo; sort; limit; offset' })
   list(@Query() query: Record<string, unknown>) {
