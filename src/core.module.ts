@@ -6,6 +6,13 @@ import {
 } from './domain';
 import { TOKENS } from './tokens';
 
+/** Infrastructure chosen at boot (app.factory.ts): Postgres repository and SMTP notifier. Defaults: JSON files, no e-mail. */
+export interface Infra {
+  repo?: PqrsdRepository;
+  notifier?: Notifier;
+  store?: 'postgres' | 'file';
+}
+
 /** Wires the framework-free domain objects. `fetchImpl` is injectable so e2e tests can fake the AI service. */
 @Global()
 @Module({})
