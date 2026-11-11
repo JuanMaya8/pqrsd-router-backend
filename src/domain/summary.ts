@@ -38,6 +38,7 @@ export function toDetail(r: PqrsdRecord, today: DateStr, tax: TaxonomyDto): Pqrs
     effective: r.effective,
     deadline: r.deadline,
     extension: r.extension ?? null,
+    transfer: r.transfer ?? null,
     timeline: r.timeline,
     response: r.response,
   };
