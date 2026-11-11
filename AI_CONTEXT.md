@@ -79,10 +79,16 @@ Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-
 * `render.yaml` + `docs/DEPLOY.md`. Se simuló el build de Render (`npm ci --include=dev && npm run build`) y se probó la pila en Docker con PostgreSQL (`e2e:fullstack` 12/12).
 * Sin probar: el envío real por un servidor SMTP (las pruebas usan `MemoryNotifier`) y el despliegue real en Render.
 
+**Añadido en la entrega final (2026-11-11, verificado con `npm test` 63+3 omitidas y `npm run test:http` 10+1 omitida):**
+* `STAFF_USERS` (`staff-users.ts`: `parseStaffUsers`, `resolveStaff` con comparación en tiempo constante). `StaffGuard` deja el nombre en la petición
+  (`@StaffName()`), los métodos del servicio reciben `actor` y lo guardan en `timeline[].actor`. `GET /staff/me`. **Invariante: `actor` nunca sale en vistas públicas.**
+* `transfer` (Art. 21): `pending_review | assigned → closed`, el oficio remisorio queda en `response`, `transfer.late` si pasaron 5 días hábiles, correo al ciudadano.
+* `docker-compose.yml` trae claves de demo por defecto (solo demo local).
+
 **No hecho:**
 * Filtros y paginación en SQL: `all()` sigue cargando todos los casos (también en PostgreSQL).
-* Autenticación por usuario y roles (jefe de dependencia, ciudadano con cuenta); hoy hay una clave compartida y el responsable es texto libre.
-* SMS; traslado por competencia (Art. 21); recordatorios automáticos antes de vencer.
+* Roles y permisos (jefe de dependencia, ciudadano con cuenta): las cuentas de `STAFF_USERS` tienen todas los mismos permisos.
+* SMS; recordatorios automáticos antes de vencer.
 * Auditoría inmutable, adjuntos, multi-entidad, paginación por cursor, métricas Prometheus, Redis para socket.io y límites de tasa con varias réplicas.
 * Validar con el área jurídica de la entidad la tabla de plazos (`deadlines.ts`), sobre todo denuncias.
 
