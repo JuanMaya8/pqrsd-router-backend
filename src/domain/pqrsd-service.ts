@@ -122,6 +122,7 @@ export class PqrsdService {
     const cls = await this.d.classifier.classify(input.text, now);
     const [rec] = await this.persistNew([{ text: input.text, channel: input.channel, citizen: input.citizen, receivedAt: now, cls }], false);
     const tax = await this.d.taxonomy.get();
+    this.notify(rec, 'received');
     const anon = input.anonymous || !input.citizen?.email;
     return {
       radicado: rec.radicado,
