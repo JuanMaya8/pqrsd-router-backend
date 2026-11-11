@@ -122,9 +122,10 @@ casi todos caerán en «requiere revisión», así que úsalo como prueba de **v
 * Los datos de demostración y el corpus de la IA son sintéticos.
 * El texto del ciudadano puede incluir datos personales que la IA no reconozca: el texto completo se guarda y solo lo ve el funcionario.
 
-## Despliegue (más adelante)
-Imagen Docker lista. Montar un volumen en `/data`, definir `STAFF_API_KEY`, `AI_URL`, `CORS_ORIGINS` y `TRUST_PROXY=1` detrás de un proxy. Opciones simples: Render, Railway,
-Fly.io o Cloud Run con volumen. Para varias réplicas hace falta base de datos compartida (contador, casos) y un adaptador de socket.io (Redis).
+## Despliegue
+Render (backend + IA + PostgreSQL) con el blueprint [`render.yaml`](render.yaml) y Vercel para el frontend: paso a paso en [docs/DEPLOY.md](docs/DEPLOY.md).
+También sirve el `Dockerfile` en cualquier proveedor (Railway, Fly.io, Cloud Run): define `DATABASE_URL`, `STAFF_API_KEY`, `AI_URL`, `CORS_ORIGINS` y `TRUST_PROXY=1`.
+Para varias réplicas, el contador ya es seguro en PostgreSQL; falta un adaptador de socket.io y el límite de tasa en Redis.
 
 ## Nombre de repositorio sugerido
 `pqrsd-router-backend`
