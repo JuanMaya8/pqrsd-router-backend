@@ -151,8 +151,8 @@ Funcionarios: cabecera `X-Staff-Key`. Vale la clave compartida (`STAFF_API_KEY`,
   "source": "ai", "isDemo": false, "assignee": "María Gómez" | null, "extended": false }
 ```
 `type/dependency/urgency` son los **efectivos** (los corregidos por el funcionario si existen).
-**PqrsdDetail** = `PqrsdSummary` + `text`, `channel`, `citizen|null`, `classification` (lo que dijo la IA: `type`, `dependency`, `urgency`, `subtype`, `entities`, `reviewReasons`, `modelVersion`, `source`), `effective` (`type`, `subtype`, `dependency`, `urgency`), `deadline` (`legalDays`, `basis`, `verify`, `dueDate` — ya incluye la ampliación), `extension: {days, reason, at, originalDueDate} | null`, `timeline:[{at,event,by,detail?}]`, `response|null`.
-Eventos de `timeline`: `received`, `classified`, `confirmed`, `reclassified`, `assigned`, `extended`, `answered`, `closed`. El tracking público muestra la ampliación con su etiqueta, **nunca** el motivo interno ni el responsable.
+**PqrsdDetail** = `PqrsdSummary` + `text`, `channel`, `citizen|null`, `classification` (lo que dijo la IA: `type`, `dependency`, `urgency`, `subtype`, `entities`, `reviewReasons`, `modelVersion`, `source`), `effective` (`type`, `subtype`, `dependency`, `urgency`), `deadline` (`legalDays`, `basis`, `verify`, `dueDate` — ya incluye la ampliación), `extension: {days, reason, at, originalDueDate} | null`, `transfer: {entity, reason, at, late} | null`, `timeline:[{at,event,by,actor?,detail?}]`, `response|null`.
+Eventos de `timeline`: `received`, `classified`, `confirmed`, `reclassified`, `assigned`, `extended`, `transferred`, `answered`, `closed`. El tracking público muestra la ampliación y el traslado con su etiqueta, **nunca** el motivo interno de la ampliación, el responsable ni `actor`.
 
 **Stats**: `{ totals:{all, open, pending_review, overdue, atRisk, needsReview}, byType, byDependency, byUrgency, avgPriority, avgBusinessDaysToAnswer, onTimeRate, aiAgreementRate, aiAvailable }`.
 `aiAgreementRate` = proporción de casos revisados donde el funcionario **no** cambió tipo, dependencia ni urgencia (indicador de calidad real de la IA).
