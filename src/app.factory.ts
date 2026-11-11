@@ -19,7 +19,20 @@ export interface BuildOptions {
 
 export async function buildApp(config: AppConfig, options: BuildOptions = {}): Promise<NestExpressApplication> {
   const { fetchImpl, swagger = true } = options;
-  const app = await NestFactory.create<NestExpressApplication>(AppModule.register(config, fetchImpl), { logger: ['error', 'warn', 'log'] });
+  const db = config.databaseUrl && !options.infra?.repo ? await openDatabase(config) : null;
+  const infra: Infra = {
+    repo: db?.repo,
+    notifier: config.smtpUrl ? new SmtpNotifier(config.smtpUrl, config.mailFrom) : undefined,
+    ...options.infra,
+  };
+  const app = await NestFactory.create<NestExpressApplication>(AppModule.register(config, fetchImpl, infra), { logger: ['error', 'warn', 'log'] });
+  if (db) {
+    const close = app.close.bind(app);
+    app.close = async () => {
+      await close();
+      await db.close();
+    };
+  }
   app.setGlobalPrefix('api/v1');
   app.set('trust proxy', config.trustProxy);
   app.use(helmet());
