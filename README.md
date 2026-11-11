@@ -117,7 +117,7 @@ No aplica a este repo (API JSON + WebSocket). El patrón por ruta (SSG / CSR / S
 casi todos caerán en «requiere revisión», así que úsalo como prueba de **volumen**, no de precisión (o usa un repo en español).
 
 ## Limitaciones conocidas
-* Los archivos JSON y el índice en memoria alcanzan para decenas de miles de casos en una instancia; más allá, usa una base de datos.
+* Con o sin PostgreSQL, la bandeja y las estadísticas filtran en memoria (`all()`): suficiente para decenas de miles de casos; más allá hay que llevar los filtros a SQL.
 * El límite de tasa es por instancia (en memoria).
 * Los datos de demostración y el corpus de la IA son sintéticos.
 * El texto del ciudadano puede incluir datos personales que la IA no reconozca: el texto completo se guarda y solo lo ve el funcionario.
