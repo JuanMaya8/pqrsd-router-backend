@@ -4,6 +4,8 @@ export interface AppConfig {
   port: number;
   nodeEnv: string;
   staffKey?: string;
+  /** named staff accounts (STAFF_USERS); the name is recorded in the case history */
+  staffUsers: StaffUser[];
   aiUrl: string;
   aiApiKey?: string;
   aiTimeoutMs: number;
