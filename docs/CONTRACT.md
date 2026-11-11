@@ -140,7 +140,7 @@ Funcionarios: cabecera `X-Staff-Key`. Vale la clave compartida (`STAFF_API_KEY`,
 **AiStatus** `{ available, modelVersion|null, model?:{syntheticSamples, feedbackSamples, trainedAt, note}, feedback?:{total, sinceLastTraining} }`.
 **Límites**: `POST /pqrsd` y `POST /pqrsd/preview` admiten `PUBLIC_WRITE_LIMIT` (20) solicitudes por minuto por IP → 429 `TOO_MANY_REQUESTS`.
 
-**Transiciones válidas**: `pending_review → assigned | answered`, `assigned → assigned` (reclasificar, asignar) `| answered`, `answered → closed`.
+**Transiciones válidas**: `pending_review → assigned | answered`, `assigned → assigned` (reclasificar, asignar) `| answered`, `pending_review | assigned → closed` (trasladar), `answered → closed`.
 `closed` es final. Cualquier otra → 409 `INVALID_TRANSITION`.
 
 **PqrsdSummary**
