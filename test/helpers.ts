@@ -113,6 +113,8 @@ export function harness(
     deadlineConfig: DEFAULT_DEADLINE_CONFIG,
     autoAssignMinConfidence: opts.autoAssignMinConfidence ?? 0,
     feedbackOnConfirm: opts.feedbackOnConfirm ?? false,
+    notifier: opts.notifier,
+    publicAppUrl: opts.publicAppUrl,
   });
   return { ai, clock, events: log, service, repo, store, cleanup: () => { if (opts.dir) rmSync(opts.dir, { recursive: true, force: true }); } };
 }
