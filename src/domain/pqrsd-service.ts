@@ -1,4 +1,4 @@
-import { bogotaDate, addDays, addBusinessDays, isBusinessDay, type DateStr } from './calendar';
+import { bogotaDate, addDays, addBusinessDays, businessDaysBetween, isBusinessDay, type DateStr } from './calendar';
 import type { AiClient } from './ai-client';
 import type { ClassificationService, TaxonomyProvider } from './classification-service';
 import type { Clock } from './clock';
