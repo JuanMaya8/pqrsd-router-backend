@@ -205,7 +205,7 @@ export class PqrsdService {
     const rec = await this.load(id);
     rec.status = transition(rec.status, 'confirm');
     rec.reviewed = true;
-    this.event(rec, 'confirmed', 'staff', note);
+    this.event(rec, 'confirmed', 'staff', note, actor);
     await this.d.repo.update(rec);
     if (this.d.feedbackOnConfirm) this.sendFeedback(rec);
     return this.emitUpdated(rec);
