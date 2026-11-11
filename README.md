@@ -41,7 +41,7 @@ curl -s localhost:3001/api/v1/pqrsd -H 'content-type: application/json' -d '{
 curl -s -XPOST localhost:3001/api/v1/staff/demo/seed -H 'content-type: application/json' -d '{"count":80}'   # datos de demostración
 curl -s "localhost:3001/api/v1/staff/pqrsd?sort=priority:desc&limit=5"                                       # bandeja ordenada
 ```
-Con las dos piezas juntas: `STAFF_API_KEY=cambia-esto docker compose up --build` (espera `../pqrsd-router-ai`).
+Con las dos piezas juntas y PostgreSQL: `STAFF_API_KEY=cambia-esto docker compose up --build` (espera `../pqrsd-router-ai`).
 
 ### Variables de entorno (`.env.example`)
 | Variable | Por defecto | Para qué |
