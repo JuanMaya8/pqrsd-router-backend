@@ -295,7 +295,7 @@ export class PqrsdService {
     const originalDueDate = rec.deadline.dueDate;
     rec.extension = { days, reason, at: this.d.clock.now().toISOString(), originalDueDate };
     rec.deadline = { ...rec.deadline, dueDate: addBusinessDays(originalDueDate, days) };
-    this.event(rec, 'extended', 'staff', `${days} días hábiles: ${originalDueDate} → ${rec.deadline.dueDate}. ${reason}`);
+    this.event(rec, 'extended', 'staff', `${days} días hábiles: ${originalDueDate} → ${rec.deadline.dueDate}. ${reason}`, actor);
     await this.d.repo.update(rec);
     this.notify(rec, 'extended');
     return this.emitUpdated(rec);
