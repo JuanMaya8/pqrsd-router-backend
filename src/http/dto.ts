@@ -28,6 +28,16 @@ export class ReclassifyDoc {
   @ApiPropertyOptional({ maxLength: 500 }) note?: string;
 }
 
+export class AssignDoc {
+  @ApiProperty({ nullable: true, example: 'María Gómez', description: 'null o vacío quita la asignación' }) assignee!: string | null;
+  @ApiPropertyOptional({ maxLength: 500 }) note?: string;
+}
+
+export class ExtendDoc {
+  @ApiProperty({ minimum: 1, example: 10, description: 'Días hábiles adicionales; máximo el plazo inicial' }) days!: number;
+  @ApiProperty({ minLength: 20, maxLength: 1000, example: 'Se requiere un concepto técnico de la empresa de acueducto para responder de fondo.' }) reason!: string;
+}
+
 export class NoteDoc {
   @ApiPropertyOptional({ maxLength: 500 }) note?: string;
 }
