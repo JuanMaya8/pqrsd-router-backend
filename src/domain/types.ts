@@ -63,8 +63,10 @@ export interface Deadline {
 
 export interface TimelineEvent {
   at: string;
-  event: 'received' | 'classified' | 'confirmed' | 'reclassified' | 'assigned' | 'extended' | 'answered' | 'closed';
+  event: 'received' | 'classified' | 'confirmed' | 'reclassified' | 'assigned' | 'extended' | 'transferred' | 'answered' | 'closed';
   by: 'citizen' | 'ai' | 'fallback' | 'staff' | 'system';
+  /** name of the staff member who acted (from STAFF_USERS). Internal: never shown on public pages. */
+  actor?: string;
   detail?: string;
 }
 
