@@ -58,12 +58,16 @@ Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-
 * Contrato con el frontend: las respuestas del servicio (`preview`, `create`, `tracking`, `transparency`, `taxonomy`, `list`, `get`, `stats`, `aiStatus`, `seedDemo`) son asignables a los tipos de `pqrsd-router-frontend` (comprobación estática),
   y el frontend recorrió todo el flujo contra este dominio servido por un adaptador HTTP temporal (no incluido). Eso destapó que las solicitudes ya respondidas/cerradas quedaban arriba de la bandeja: ahora `rankScore` las manda al final (prueba incluida).
 
-**Escrito pero NO ejecutado** (en el sandbox no se podía instalar NestJS: npm bloqueado):
-* `src/app*.ts`, `src/core.module.ts`, `src/main.ts`, `src/http/*`, `src/modules/*` (controladores, guardas, gateway), `test/http/app.e2e.test.ts`, `Dockerfile`, `docker-compose.yml`, CI,
-  `scripts/import-github-issues.mjs`. Se comprobaron los tipos propios con `tsc` contra declaraciones simuladas de Nest.
-→ **Primera tarea al retomar:** `npm install && npm run typecheck && npm test && npm run test:http && npm run build` y arreglar lo que falle. Puntos de riesgo conocidos:
-  `ThrottlerGuard` global + gateway; `@WebSocketServer()` devuelve un `Namespace` (no `Server`) en un gateway con namespace; `app.set('trust proxy', …)`;
-  Swagger sin metadatos de decoradores bajo `tsx` (por eso `swagger:false` en e2e).
+**Verificado al retomar (2026-11-11, Windows, Node 22, NestJS 10 real):**
+* `npm run typecheck` limpio, `npm test` 51/51, `npm run test:http` 8/8, `npm run build` OK.
+* Corregido: `OnModuleDestroy` venía de `@nestjs/websockets` (no existe ahí) → `@nestjs/common`.
+* Corregido: JSON mal formado devolvía `HTTP_400`; Nest (`RoutesResolver.mapExternalException`) convierte el `SyntaxError` de body-parser en `BadRequestException`
+  antes de llegar al filtro, así que `exceptions.filter.ts` lo reconoce por el mensaje.
+* Los riesgos señalados (`ThrottlerGuard` global + gateway, `Namespace` en `@WebSocketServer()`, `trust proxy`) funcionaron sin cambios.
+* Integración real: backend compilado + `pqrsd-router-ai` (uvicorn) + frontend `next start`: CORS con `X-Staff-Key`, socket con `auth.staffKey` («En vivo»), evento `pqrsd.created`
+  que actualiza la bandeja, feedback que llega a la IA y `POST /staff/ai/retrain`. `docker compose up --build` con los 3 repos.
+* `package-lock.json` versionado (la CI usa `npm ci`).
+* Sin ejecutar: `scripts/import-github-issues.mjs` contra GitHub.
 
 **No hecho:**
 * **PostgreSQL**: implementar `PqrsdRepository` (reserve/insert/insertMany/update/get/findByRadicado/all/removeWhere) con una secuencia por año y búsqueda indexada; `all()` carga todo en memoria hoy.
