@@ -1,5 +1,5 @@
-import { Inject, Logger } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayInit, OnModuleDestroy, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Inject, Logger, type OnModuleDestroy } from '@nestjs/common';
+import { OnGatewayConnection, OnGatewayInit, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import type { Namespace, Socket } from 'socket.io';
 import { loadConfig, type AppConfig, type EventBus } from '../domain';
 import { staffKeyMatches } from '../http/staff.guard';
