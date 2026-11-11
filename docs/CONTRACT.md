@@ -84,7 +84,8 @@ Errores: `{ "code": "...", "message": "<español>" }`; validación de forma → 
 Errores: `{ "statusCode": 400, "code": "VALIDATION_ERROR", "message": "<español>", "details"?: string[] }`.
 Códigos: `VALIDATION_ERROR` 400, `INVALID_JSON` 400, `UNAUTHORIZED` 401, `NOT_FOUND` 404, `INVALID_TRANSITION` 409, `EXTENSION_NOT_ALLOWED` 409,
 `AI_UNAVAILABLE` 503 (solo en `/staff/ai/*`), `TOO_MANY_REQUESTS` 429, `PAYLOAD_TOO_LARGE` 413.
-Funcionarios: cabecera `X-Staff-Key` (variable `STAFF_API_KEY`). Si la variable está vacía, el backend arranca en modo abierto solo con `NODE_ENV != production`.
+Funcionarios: cabecera `X-Staff-Key`. Vale la clave compartida (`STAFF_API_KEY`, nombre «Funcionario») o una cuenta con nombre de `STAFF_USERS="Ana Pérez:clave-ana,Luis Ruiz:clave-luis"`
+(clave de 8+ caracteres; el nombre queda en `timeline[].actor`). Si ambas están vacías, el backend arranca en modo abierto solo con `NODE_ENV != production`.
 
 ### 4.1 Ciudadano (sin autenticación; con límite de peticiones)
 
