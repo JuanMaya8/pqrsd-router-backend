@@ -342,6 +342,10 @@ export class PqrsdService {
         subject: `Ampliamos el plazo de tu solicitud ${rec.radicado}`,
         text: `${greeting}\n\nNo es posible responder tu solicitud ${rec.radicado} dentro del plazo inicial (${rec.extension ? dateEs(rec.extension.originalDueDate) : ''}).\nMotivo: ${rec.extension?.reason ?? ''}\nNueva fecha máxima de respuesta: ${due} (Art. 14, parágrafo, Ley 1437 de 2011).`,
       },
+      transferred: {
+        subject: `Trasladamos tu solicitud ${rec.radicado} a la autoridad competente`,
+        text: `${greeting}\n\n${rec.response?.text ?? ''}`,
+      },
       answered: {
         subject: `Respondimos tu solicitud ${rec.radicado}`,
         text: `${greeting}\n\nLa entidad respondió tu solicitud ${rec.radicado}:\n\n${rec.response?.text ?? ''}`,
