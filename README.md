@@ -25,8 +25,8 @@ npm install
 cp .env.example .env              # opcional; ver la tabla de variables
 npm run start:dev                 # http://localhost:3001/api/v1   ·   Swagger: http://localhost:3001/docs
 
-npm run typecheck && npm test     # 61 pruebas del dominio (3 usan PostgreSQL y se omiten sin TEST_DATABASE_URL)
-npm run test:http                 # pruebas HTTP/WebSocket con Nest real y una IA falsa (10; 1 con PostgreSQL)
+npm run typecheck && npm test     # 66 pruebas del dominio (3 usan PostgreSQL y se omiten sin TEST_DATABASE_URL)
+npm run test:http                 # pruebas HTTP/WebSocket con Nest real y una IA falsa (11; 1 con PostgreSQL)
 
 # PostgreSQL para las pruebas (opcional):
 docker run -d --name pqrsd-pg-test -e POSTGRES_PASSWORD=pg -e POSTGRES_DB=pqrsd -p 55432:5432 postgres:16-alpine
