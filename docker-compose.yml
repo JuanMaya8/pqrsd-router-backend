@@ -2,8 +2,22 @@
 # (or replace `build:` with an image once you publish it).
 # NODE_ENV=production requires STAFF_API_KEY:  STAFF_API_KEY=cambia-esto docker compose up --build
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pqrsd
+      POSTGRES_PASSWORD: pqrsd
+      POSTGRES_DB: pqrsd
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pqrsd"]
+      interval: 5s
+      retries: 10
   ai:
     build: ../pqrsd-router-ai
+    depends_on:
+      db: { condition: service_healthy }
     environment:
       MODELS_DIR: /data/models
       FEEDBACK_FILE: /data/feedback/feedback.jsonl
