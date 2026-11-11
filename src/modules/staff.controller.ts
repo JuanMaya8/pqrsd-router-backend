@@ -42,8 +42,8 @@ export class StaffController {
   @Post('pqrsd/:id/reclassify')
   @HttpCode(200)
   @ApiOperation({ summary: 'Corrige tipo, subtipo, dependencia o urgencia (alimenta a la IA)' })
-  reclassify(@Param('id') id: string, @Body() body: ReclassifyDoc) {
-    return this.service.reclassify(id, body);
+  reclassify(@Param('id') id: string, @Body() body: ReclassifyDoc, @StaffName() actor: string) {
+    return this.service.reclassify(id, body, actor);
   }
 
   @Post('pqrsd/:id/assign')
