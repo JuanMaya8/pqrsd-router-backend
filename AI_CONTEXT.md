@@ -44,9 +44,9 @@ Invariantes que NO se deben romper:
 ## 4. Cómo ejecutar y probar
 ```bash
 npm install
-npm test                     # 51 pruebas del dominio (tsx --test)
+npm test                     # 61 pruebas del dominio (tsx --test; 3 necesitan TEST_DATABASE_URL)
 npm run typecheck
-npm run test:http            # Nest real + supertest + socket.io-client contra una IA falsa (8 pruebas)
+npm run test:http            # Nest real + supertest + socket.io-client contra una IA falsa (10 pruebas; 1 con PostgreSQL)
 npm run start:dev            # :3001, Swagger en /docs
 ```
 Los tests usan `FakeAi` (`test/helpers.ts`) y `FakeClock` (T0 = miércoles 2025-03-05 10:00 Bogotá). `test/contract.test.ts` usa
