@@ -48,7 +48,10 @@ Con las dos piezas juntas y PostgreSQL: `STAFF_API_KEY=cambia-esto docker compos
 |----------|-------------|----------|
 | `STAFF_API_KEY` | — | Clave `X-Staff-Key` de los funcionarios (rutas `/staff/*` y sala de socket). **Obligatoria en producción** |
 | `AI_URL`, `AI_API_KEY`, `AI_TIMEOUT_MS` | `http://localhost:8000`, —, `8000` | Servicio de IA. Pasado el timeout se usa el respaldo y se omite la IA 20 s |
-| `DATA_DIR` | `./data` | Un archivo JSON por caso (montar volumen en producción) |
+| `DATA_DIR` | `./data` | Un archivo JSON por caso (solo si no hay `DATABASE_URL`; montar volumen) |
+| `DATABASE_URL`, `DATABASE_SSL` | —, `false` | PostgreSQL (migraciones automáticas al arrancar). `DATABASE_SSL=true` para conexiones externas que exigen TLS |
+| `SMTP_URL`, `MAIL_FROM` | —, `PQRSD <no-reply@localhost>` | Correos al ciudadano (radicación, ampliación, respuesta). Vacío = no se envían |
+| `PUBLIC_APP_URL` | — | URL del frontend para el enlace de seguimiento en los correos |
 | `CORS_ORIGINS` | `http://localhost:3000` | Orígenes del frontend |
 | `PUBLIC_WRITE_LIMIT`, `THROTTLE_LIMIT`, `TRUST_PROXY` | `20`, `300`, `0` | Límites por IP por minuto (escrituras anónimas / todo). `TRUST_PROXY=1` detrás de un proxy |
 | `DENUNCIA_DAYS` | `15` | Plazo en días hábiles para denuncias (**validar con el área jurídica**) |
