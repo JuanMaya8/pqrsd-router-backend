@@ -131,6 +131,8 @@ export interface PqrsdSummary {
   slaStatus: SlaStatus;
   source: 'ai' | 'fallback';
   isDemo: boolean;
+  assignee: string | null;
+  extended: boolean;
 }
 
 export interface PqrsdDetail extends PqrsdSummary {
