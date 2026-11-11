@@ -301,8 +301,33 @@ export class PqrsdService {
     return this.emitUpdated(rec);
   }
 
+  /**
+   * Transfer for lack of competence (Art. 21, Ley 1437 de 2011): the entity forwards the request to the competent authority and sends the
+   * citizen a copy of the transfer letter. Here the letter becomes the case response and the case is closed. Allowed after the 5 business
+   * days (better late than never), but recorded as `late`.
+   */
+  async transfer(id: string, raw: unknown, actor?: string): Promise<PqrsdDetail> {
+    const { entity, reason } = parseTransfer(raw);
+    const rec = await this.load(id);
+    rec.status = transition(rec.status, 'transfer');
+    const now = this.d.clock.now().toISOString();
+    const late = businessDaysBetween(rec.deadline.countFrom, this.today()) > 5;
+    rec.transfer = { entity, reason, at: now, late };
+    rec.response = {
+      text:
+        `Su solicitud ${rec.radicado} no es competencia de esta entidad. En cumplimiento del artículo 21 de la Ley 1437 de 2011 la trasladamos a: ${entity}, ` +
+        `que deberá responderle dentro de los términos de ley contados desde su recepción. Motivo: ${reason}`,
+      answeredAt: now,
+    };
+    rec.reviewed = true;
+    this.event(rec, 'transferred', 'staff', `a ${entity}${late ? ' (fuera de los 5 días hábiles del Art. 21)' : ''}. ${reason}`, actor);
+    await this.d.repo.update(rec);
+    this.notify(rec, 'transferred');
+    return this.emitUpdated(rec);
+  }
+
   /** Citizen e-mail in the background: never blocks or fails the request, never for demo cases or citizens without e-mail. */
-  private notify(rec: PqrsdRecord, kind: 'received' | 'extended' | 'answered'): void {
+  private notify(rec: PqrsdRecord, kind: 'received' | 'extended' | 'transferred' | 'answered'): void {
     const to = rec.citizen?.email;
     if (!to || rec.isDemo || !this.notifier.enabled) return;
     const link = this.d.publicAppUrl ? `\n\nConsulta el estado en: ${this.d.publicAppUrl}/consulta/${rec.radicado}?code=${rec.trackingCode}` : '';
