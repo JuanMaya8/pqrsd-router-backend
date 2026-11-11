@@ -2,7 +2,7 @@ import { DynamicModule, Global, Module } from '@nestjs/common';
 import { join } from 'node:path';
 import {
   AiClient, BlobPqrsdRepository, ClassificationService, DEFAULT_DEADLINE_CONFIG, EventBus, FileBlobStore, PqrsdService, RateLimiter, TaxonomyProvider, systemClock,
-  type AppConfig, type FetchLike,
+  type AppConfig, type FetchLike, type Notifier, type PqrsdRepository,
 } from './domain';
 import { TOKENS } from './tokens';
 
