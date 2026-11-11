@@ -50,6 +50,11 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     autoAssignMinConfidence: num(env.AUTO_ASSIGN_MIN_CONFIDENCE, 0),
     feedbackOnConfirm: env.FEEDBACK_ON_CONFIRM === 'true',
     trustProxy: Math.round(num(env.TRUST_PROXY, 0)),
+    databaseUrl: env.DATABASE_URL || undefined,
+    databaseSsl: env.DATABASE_SSL === 'true',
+    smtpUrl: env.SMTP_URL || undefined,
+    mailFrom: env.MAIL_FROM || 'PQRSD <no-reply@localhost>',
+    publicAppUrl: env.PUBLIC_APP_URL ? env.PUBLIC_APP_URL.replace(/\/$/, '') : undefined,
     version: env.npm_package_version ?? '0.1.0',
   };
 }
