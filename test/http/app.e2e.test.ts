@@ -23,7 +23,7 @@ const API = '/api/v1';
 const KEY = { 'X-Staff-Key': 'staff-test' };
 
 before(async () => {
-  const config = loadConfig({ DATA_DIR: dir, AI_URL: 'http://ai.test', CORS_ORIGINS: 'http://localhost:3000', STAFF_API_KEY: 'staff-test', THROTTLE_LIMIT: '1000', PUBLIC_WRITE_LIMIT: '30' });
+  const config = loadConfig({ DATA_DIR: dir, AI_URL: 'http://ai.test', CORS_ORIGINS: 'http://localhost:3000', STAFF_API_KEY: 'staff-test', STAFF_USERS: 'Ana Pérez:clave-ana-1', THROTTLE_LIMIT: '1000', PUBLIC_WRITE_LIMIT: '30' });
   app = await buildApp(config, { fetchImpl: ai.fetch, swagger: false });
   await app.listen(0, '127.0.0.1');
   base = await app.getUrl();
