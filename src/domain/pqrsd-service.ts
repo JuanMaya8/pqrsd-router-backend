@@ -14,8 +14,8 @@ import type { PqrsdRepository } from './repository';
 import { publicStats, staffStats, type PublicStats, type StaffStats } from './stats';
 import { queryCases, redactPii, scrubCitizen, toDetail, toSummary } from './summary';
 import { FALLBACK_DEPENDENCY, type Channel, type Citizen, type Effective, type Page, type PqrsdDetail, type PqrsdRecord, type PqrsdSummary, type Receipt, type SlaStatus, type Status, type StoredClassification, type TimelineEvent, type Urgency } from './types';
-import { parseCreate, parseListQuery, parseNote, parseAnswer, parseImport, parsePreview, parseReclassify, parseSeed, type ListQuery } from './validation';
-import { transition } from './workflow';
+import { parseAnswer, parseAssign, parseCreate, parseExtend, parseImport, parseListQuery, parseNote, parsePreview, parseReclassify, parseSeed, type ListQuery } from './validation';
+import { isOpen, transition } from './workflow';
 
 export interface ServiceDeps {
   repo: PqrsdRepository;
