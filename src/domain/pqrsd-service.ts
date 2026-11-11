@@ -161,6 +161,7 @@ export class PqrsdService {
       slaLabel: SLA_LABELS[s.slaStatus],
       businessDaysLeft: s.businessDaysLeft,
       timeline: rec.timeline.map((t) => ({ at: t.at, event: t.event, label: PUBLIC_EVENT_LABELS[t.event] ?? t.event })),
+      transfer: rec.transfer ? { entity: rec.transfer.entity, at: rec.transfer.at } : null,
       response: rec.response,
     };
   }
