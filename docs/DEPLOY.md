@@ -1,63 +1,97 @@
-# Despliegue: Render (backend + IA + PostgreSQL) y Vercel (frontend)
+# Despliegue: Render (backend + IA), Neon (PostgreSQL) y Vercel (frontend)
 
 ```
 Vercel (Next.js)  ──HTTPS / WebSocket──▶  Render: pqrsd-router-backend  ──HTTPS + X-API-Key──▶  Render: pqrsd-router-ai
                                                    │                                                   │
-                                                   └──────────────▶  Render PostgreSQL  ◀──────────────┘
-                                                                     (casos: pq_cases · correcciones: ai_feedback)
+                                                   └────────────────▶  Neon (PostgreSQL)  ◀────────────┘
+                                                                  casos: pq_cases, pq_counters · correcciones: ai_feedback
 ```
 
-El blueprint [`render.yaml`](../render.yaml) crea los tres recursos de Render. El frontend va a Vercel
-(ver `pqrsd-router-frontend/docs/DEPLOY.md`).
+Orden: **1. Neon → 2. Render (IA y backend) → 3. Vercel → 4. volver a Render a poner el dominio de Vercel.**
+El frontend tiene su propia guía: `pqrsd-router-frontend/docs/DEPLOY.md`.
 
-## 1. Requisitos
-* Los tres repos en GitHub (`pqrsd-router-ai`, `pqrsd-router-backend`, `pqrsd-router-frontend`) y cuentas en Render y Vercel.
-* Si tus repos no están en `github.com/JuanMaya8/...`, cambia los campos `repo:` de `render.yaml`.
+## 1. Neon (base de datos)
+1. Neon → **New Project** (nombre p. ej. `pqrsd`, región `AWS US East` para estar cerca de Render Oregon/Ohio). Postgres 16 o 17 sirven.
+2. **Connect** → copia la *connection string*. Se ve así:
+   `postgresql://neondb_owner:XXXX@ep-algo-123456.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
+   Sirve la directa o la *pooled* (`-pooler` en el host); recomendada: la **directa** (desactiva *Connection pooling* al copiarla).
+3. No crees tablas: el backend aplica sus migraciones al arrancar y la IA crea `ai_feedback` sola. Las dos piezas usan **la misma** URL.
 
-## 2. Render (en este orden)
-1. **New → Blueprint** → elige el repo `pqrsd-router-backend` → Render lee `render.yaml`.
-2. Llena las variables que pide (`sync: false`). Si aún no tienes la URL de Vercel, pon un valor provisional y cámbialo en el paso 4:
+El backend activa TLS solo cuando la URL trae `sslmode=require` o el host es `*.neon.tech` (no hace falta `DATABASE_SSL`).
+Neon suspende la base tras ~5 min sin uso; la primera consulta después tarda ~1 s más. El pool del backend descarta las conexiones
+cortadas y la IA abre una conexión por operación, así que ninguna de las dos se queda con una conexión muerta.
 
-   | Variable | Valor |
-   |----------|-------|
-   | `AI_URL` | `https://pqrsd-router-ai.onrender.com` (la URL pública que Render le asigna a la IA) |
-   | `CORS_ORIGINS` | `https://<tu-proyecto>.vercel.app` (varias separadas por coma) |
-   | `PUBLIC_APP_URL` | `https://<tu-proyecto>.vercel.app` (enlace de seguimiento en los correos) |
-   | `SMTP_URL` | opcional, p. ej. `smtps://usuario:clave-de-aplicacion@smtp.gmail.com:465`; vacío = no se envían correos |
-   | `MAIL_FROM` | opcional, p. ej. `PQRSD Alcaldía <pqrsd@tu-dominio.gov.co>` |
+## 2. Render (IA y backend)
 
-3. **Apply**. Render crea la base de datos, la IA (entrena el modelo al arrancar, ~15 s) y el backend (aplica las migraciones de PostgreSQL al arrancar).
-   Comprueba: `https://pqrsd-router-backend.onrender.com/api/v1/health` → `"store":"postgres"` y `"ai":{"available":true,…}`.
-4. Cuando tengas el dominio de Vercel, actualiza `CORS_ORIGINS` y `PUBLIC_APP_URL` del backend (Environment → Save → se redepliega solo).
-5. La clave de funcionario es `STAFF_API_KEY` del backend (Render la genera): cópiala de *Environment* y escríbela en `/funcionario`.
-   Opcional: agrega `STAFF_USERS` = `Ana Pérez:clave-de-ana,Luis Ruiz:clave-de-luis` (claves de 8+ caracteres) para que cada funcionario entre
-   con su propia clave y su nombre quede en el historial de cada caso («Asignarme» usa ese nombre).
+### Opción A: Blueprint (crea los dos servicios de una vez)
+1. **New → Blueprint** → repo `pqrsd-router-backend` → Render lee [`render.yaml`](../render.yaml).
+2. Llena lo que pide (`sync: false`):
 
-Generadas automáticamente: `STAFF_API_KEY`, `AI_API_KEY` (la misma en la IA y en el backend), `DATABASE_URL` (URL interna de Render, sin TLS).
+   | Variable | Servicio | Valor |
+   |----------|----------|-------|
+   | `DATABASE_URL` | IA **y** backend | La URL de Neon del paso 1 (la misma en los dos) |
+   | `AI_URL` | backend | `https://pqrsd-router-ai.onrender.com` (la URL que Render le da a la IA; si el nombre está ocupado, cambia) |
+   | `CORS_ORIGINS` | backend | `https://<tu-proyecto>.vercel.app` (provisional si aún no la tienes; varias separadas por coma) |
+   | `PUBLIC_APP_URL` | backend | `https://<tu-proyecto>.vercel.app` (enlace de seguimiento en los correos) |
+   | `SMTP_URL`, `MAIL_FROM` | backend | Opcionales (correos al ciudadano). Vacíos = no se envían |
 
-## 3. Qué esperar del plan gratuito
-* **Los servicios se duermen** tras ~15 min sin tráfico; la primera petición tarda ~1 min. Mientras la IA despierta, el backend clasifica con el
-  respaldo por palabras clave (`source: "fallback"`, siempre marcado *por confirmar*): **la radicación nunca se bloquea**.
-* **El disco se borra en cada despliegue**: por eso los casos y las correcciones viven en PostgreSQL; la IA vuelve a entrenar al arrancar
-  con el corpus sintético + las correcciones guardadas.
-* **La base gratuita de Render vence a los 30 días**: pasa a un plan pago o usa otra base (Neon, Supabase) cambiando `DATABASE_URL`
-  en los dos servicios y `DATABASE_SSL=true` en el backend si la conexión es externa.
+3. **Apply**. `STAFF_API_KEY` y `AI_API_KEY` se generan solas (la IA y el backend comparten la misma `AI_API_KEY`).
+
+### Opción B: a mano (como en otros proyectos)
+Crea primero la IA, luego el backend.
+
+**IA**: New → **Web Service** → repo `pqrsd-router-ai`
+* Runtime **Python 3** · Build `pip install -r requirements.txt` · Start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+* Health check path `/health` · Plan Free
+* Environment: `PYTHON_VERSION=3.12.7`, `DATABASE_URL=<URL de Neon>`, `AI_API_KEY=<inventa una clave larga>`, `BOOTSTRAP_SAMPLES=6000`
+
+**Backend**: New → **Web Service** → repo `pqrsd-router-backend`
+* Runtime **Node** · Build `npm ci --include=dev && npm run build` · Start `node dist/main.js`
+* Health check path `/api/v1/health` · Plan Free
+* Environment:
+
+  | Variable | Valor |
+  |----------|-------|
+  | `NODE_VERSION` | `20.18.1` |
+  | `NODE_ENV` | `production` |
+  | `DATABASE_URL` | La URL de Neon (la misma de la IA) |
+  | `AI_URL` | `https://pqrsd-router-ai.onrender.com` (URL de tu servicio de IA) |
+  | `AI_API_KEY` | La misma clave que pusiste en la IA |
+  | `AI_TIMEOUT_MS` | `10000` |
+  | `STAFF_API_KEY` | Una clave larga para entrar a `/funcionario` |
+  | `STAFF_USERS` | Opcional: `Ana Pérez:clave-de-ana,Luis Ruiz:clave-de-luis` (claves de 8+ caracteres; el nombre queda en el historial) |
+  | `CORS_ORIGINS` | `https://<tu-proyecto>.vercel.app` |
+  | `PUBLIC_APP_URL` | `https://<tu-proyecto>.vercel.app` |
+  | `TRUST_PROXY` | `1` |
+
+`--include=dev` es necesario: el CLI de Nest y TypeScript son devDependencies y con `NODE_ENV=production` npm no los instalaría.
+
+### Comprobar
+`https://pqrsd-router-backend.onrender.com/api/v1/health` → `"store":"postgres"` y `"ai":{"available":true,…}`.
+Si dice `"available":false`, revisa `AI_URL` y que `AI_API_KEY` sea idéntica en los dos servicios (o espera: la IA tarda ~1 min en despertar).
+
+## 3. Vercel
+Sigue `pqrsd-router-frontend/docs/DEPLOY.md` (`NEXT_PUBLIC_API_URL=https://pqrsd-router-backend.onrender.com/api/v1`).
+
+## 4. De vuelta en Render
+1. Pon el dominio real de Vercel en `CORS_ORIGINS` y `PUBLIC_APP_URL` del backend (Environment → Save → se redepliega solo).
+   Sin esto el navegador bloquea las llamadas (CORS) y el tiempo real no conecta.
+2. Entra a `https://<tu-proyecto>.vercel.app/funcionario` con `STAFF_API_KEY` (o una clave de `STAFF_USERS`) → debe decir «En vivo».
+   Para la presentación: «IA y datos de demostración» → **Crear 60 casos de demostración** (se borran con «Borrar demostración»).
+
+## Qué esperar de los planes gratuitos
+* **Render duerme los servicios** tras ~15 min sin tráfico; la primera petición tarda ~1 min. Mientras la IA despierta, el backend clasifica
+  con el respaldo por palabras clave (marcado «Sin IA», *por confirmar*): **la radicación nunca se bloquea**. Antes de presentar, abre
+  `/api/v1/health` del backend y `/health` de la IA un par de minutos antes para despertarlos.
+* **El disco de Render se borra en cada despliegue**: por eso casos y correcciones viven en Neon; la IA reentrena al arrancar con el corpus
+  sintético + las correcciones guardadas.
+* **Neon gratis no vence** (a diferencia de la base gratuita de Render, que se borra a los 30 días). Límite: 0,5 GB, de sobra para el proyecto.
 * Una sola instancia: el límite de tasa y socket.io son en memoria. Para varias réplicas hace falta Redis (ver AI_CONTEXT.md).
 
-## 4. Sin blueprint (manual)
-* **PostgreSQL**: New → PostgreSQL. Copia la *Internal Database URL*.
-* **IA**: New → Web Service → repo `pqrsd-router-ai` · Runtime Python · Build `pip install -r requirements.txt` ·
-  Start `uvicorn app.main:app --host 0.0.0.0 --port $PORT` · Health check `/health` · Env: `PYTHON_VERSION=3.12.7`, `AI_API_KEY`, `DATABASE_URL`.
-* **Backend**: New → Web Service → repo `pqrsd-router-backend` · Runtime Node · Build `npm ci --include=dev && npm run build` ·
-  Start `node dist/main.js` · Health check `/api/v1/health` · Env: las de `render.yaml`.
-* También puedes usar los `Dockerfile` de cada repo (Runtime Docker); Render inyecta `PORT`.
-
-## 5. Probar el despliegue
+## Probar el despliegue
 ```bash
 B=https://pqrsd-router-backend.onrender.com/api/v1
 curl -s $B/health
 curl -s -X POST $B/pqrsd/preview -H 'Content-Type: application/json' -d '{"text":"No llega el agua a mi barrio hace tres semanas."}'
-curl -s $B/staff/stats -H "X-Staff-Key: $STAFF_API_KEY"
-# desde pqrsd-router-frontend, contra el sitio publicado:
-E2E_BASE_URL=https://<tu-proyecto>.vercel.app E2E_STAFF_KEY=$STAFF_API_KEY npm run e2e:fullstack   # crea casos reales: bórralos o usa una base de prueba
+curl -s $B/staff/me -H "X-Staff-Key: $STAFF_API_KEY"
 ```
