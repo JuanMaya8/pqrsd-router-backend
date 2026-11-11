@@ -13,7 +13,7 @@ async function bootstrap(): Promise<void> {
   const log = new Logger('Bootstrap');
   log.log(`API:     http://localhost:${config.port}/api/v1`);
   log.log(`Swagger: http://localhost:${config.port}/docs`);
-  log.log(`IA:      ${config.aiUrl}  ·  datos: ${config.dataDir}  ·  clave de funcionario: ${config.staffKey ? 'activada' : 'DESACTIVADA (solo desarrollo)'}`);
+  log.log(`IA:      ${config.aiUrl}  ·  datos: ${config.dataDir}  ·  funcionarios: ${config.staffUsers.length ? `${config.staffUsers.length} cuentas` : ''}${config.staffKey ? `${config.staffUsers.length ? ' + ' : ''}clave compartida` : ''}${config.staffKey || config.staffUsers.length ? '' : 'SIN CLAVE (solo desarrollo)'}`);
 }
 
 void bootstrap();
