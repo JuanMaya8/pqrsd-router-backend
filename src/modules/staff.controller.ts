@@ -13,7 +13,7 @@ export class StaffController {
   constructor(@Inject(TOKENS.SERVICE) private readonly service: PqrsdService) {}
 
   @Get('pqrsd')
-  @ApiOperation({ summary: 'Bandeja: filtros status, type, dependency, urgency, sla, needsReview, q, isDemo; sort; limit; offset' })
+  @ApiOperation({ summary: 'Bandeja: filtros status, type, dependency, urgency, sla, needsReview, assignee, unassigned, q, isDemo; sort; limit; offset' })
   list(@Query() query: Record<string, unknown>) {
     return this.service.list(query);
   }
