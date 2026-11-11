@@ -1,6 +1,6 @@
 # Backend + IA together. Expects the AI repo next to this one:  ../pqrsd-router-ai
 # (or replace `build:` with an image once you publish it).
-# NODE_ENV=production requires STAFF_API_KEY:  STAFF_API_KEY=cambia-esto docker compose up --build
+# Usage:  docker compose up --build   (demo staff keys below are for a local demo only: override STAFF_API_KEY / STAFF_USERS)
 services:
   db:
     image: postgres:16-alpine
