@@ -45,10 +45,9 @@ services:
       # mandatory in production; read it in the Render dashboard and type it in /funcionario
       - key: STAFF_API_KEY
         generateValue: true
+      # same Neon URL as the AI. TLS is turned on automatically for Neon (sslmode=require / *.neon.tech)
       - key: DATABASE_URL
-        fromDatabase:
-          name: pqrsd-db
-          property: connectionString
+        sync: false
       # public URL of the AI service, e.g. https://pqrsd-router-ai.onrender.com
       - key: AI_URL
         sync: false
