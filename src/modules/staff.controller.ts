@@ -35,8 +35,8 @@ export class StaffController {
   @Post('pqrsd/:id/confirm')
   @HttpCode(200)
   @ApiOperation({ summary: 'Acepta la clasificación de la IA' })
-  confirm(@Param('id') id: string, @Body() body: NoteDoc) {
-    return this.service.confirm(id, body);
+  confirm(@Param('id') id: string, @Body() body: NoteDoc, @StaffName() actor: string) {
+    return this.service.confirm(id, body, actor);
   }
 
   @Post('pqrsd/:id/reclassify')
