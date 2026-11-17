@@ -86,7 +86,7 @@ Sigue `pqrsd-router-frontend/docs/DEPLOY.md` (`NEXT_PUBLIC_API_URL=https://pqrsd
 * **El disco de Render se borra en cada despliegue**: por eso casos y correcciones viven en Neon; la IA reentrena al arrancar con el corpus
   sintético + las correcciones guardadas.
 * **Neon gratis no vence** (a diferencia de la base gratuita de Render, que se borra a los 30 días). Límite: 0,5 GB, de sobra para el proyecto.
-* Una sola instancia: el límite de tasa y socket.io son en memoria. Para varias réplicas hace falta Redis (ver AI_CONTEXT.md).
+* Una sola instancia: el límite de tasa y socket.io son en memoria. Para varias réplicas hace falta Redis.
 
 ## Probar el despliegue
 ```bash

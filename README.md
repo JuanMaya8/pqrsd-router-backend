@@ -1,136 +1,135 @@
-# pqrsd-router-backend
+# PQRSD Inteligente · Backend
 
-Backend (**NestJS 10**) del proyecto *Clasificador y Enrutador Inteligente de PQRSD para Entidades Públicas*.
-Es el segundo repositorio del sistema (junto a `pqrsd-router-frontend` y `pqrsd-router-ai`).
+API del proyecto *Clasificador y Enrutador Inteligente de PQRSD para Entidades Públicas*. Es el centro del sistema: **radica** cada
+solicitud, la **clasifica al recibirla** (con el servicio de IA), calcula el **plazo legal en días hábiles colombianos**, controla el
+**semáforo de vencimiento**, gobierna el **flujo de estados**, publica **indicadores** y avisa en **tiempo real** a la bandeja de funcionarios.
 
-Hace lo que no puede hacer ni la IA ni la pantalla: **radica** la solicitud (número de radicado + código de seguimiento),
-**clasifica al recibirla** (llamando a la IA), calcula el **plazo legal en días hábiles colombianos** (festivos, Ley Emiliani, Semana Santa),
-mantiene el **semáforo de vencimiento (SLA)**, gobierna el **flujo de estados**, calcula **indicadores**, transmite **eventos en tiempo real**
-y devuelve a la IA las **correcciones de los funcionarios** (sin datos personales) para que aprenda.
-También asigna un **funcionario responsable**, gestiona la **ampliación del plazo** (Art. 14 parágrafo, Ley 1437 de 2011), envía **correos al ciudadano**
-(radicación, ampliación y respuesta) y guarda los casos en **PostgreSQL** (o en archivos JSON en desarrollo).
+| Repositorio | Rol |
+|---|---|
+| [`pqrsd-router-frontend`](https://github.com/JuanMaya8/pqrsd-router-frontend) | Portal ciudadano y bandeja de funcionarios (Next.js) |
+| **`pqrsd-router-backend`** (este) | Radicación, plazos legales, flujo y tiempo real (NestJS) |
+| [`pqrsd-router-ai`](https://github.com/JuanMaya8/pqrsd-router-ai) | Clasificación híbrida, entidades y aprendizaje continuo (FastAPI + scikit-learn) |
 
-> **Estado: avance funcional (v0.1.0)**, no el proyecto terminado. Lee *Qué está hecho y qué no*.
+> Guía de demostración (levantar todo con una orden, claves de prueba y recorrido de 10 minutos):
+> [`pqrsd-router-frontend/docs/GUIA_DEMO.md`](https://github.com/JuanMaya8/pqrsd-router-frontend/blob/main/docs/GUIA_DEMO.md)
 
-> **Para la entrega:** la guía de demostración (cómo levantar todo con una orden, claves de prueba y recorrido de 10 minutos) está en
-> [`pqrsd-router-frontend/docs/GUIA_DEMO.md`](https://github.com/JuanMaya8/pqrsd-router-frontend/blob/main/docs/GUIA_DEMO.md).
+---
 
-## Cómo ejecutarlo
+## Funcionalidades
 
-Requisitos: **Node 18.18+** (probado con Node 22 en el sandbox) y, para clasificar de verdad, `pqrsd-router-ai` corriendo en `:8000`
-(si no está, el backend **sigue funcionando** con un clasificador de respaldo por palabras clave).
+**Para el ciudadano**
+* **Radicación** con número único (`PQRSD-2026-000123`) y **código de seguimiento**; también anónima.
+* **Vista previa** de la clasificación mientras escribe.
+* **Consulta del estado** con radicado + código, sin datos personales.
+* **Transparencia**: indicadores públicos agregados.
+* **Correos** de radicación, ampliación y respuesta (si hay SMTP configurado).
 
-```bash
-npm install
-cp .env.example .env              # opcional; ver la tabla de variables
-npm run start:dev                 # http://localhost:3001/api/v1   ·   Swagger: http://localhost:3001/docs
+**Para el funcionario** (rutas `/staff/*`, protegidas con clave)
+* Bandeja con filtros, búsqueda, orden por prioridad y paginación.
+* Confirmar o **corregir la clasificación** de la IA (la corrección se envía anonimizada para que aprenda).
+* **Asignar responsable**, **ampliar el plazo** (una vez, Art. 14 parágrafo), **trasladar por competencia** (Art. 21), responder y cerrar.
+* Cuentas con nombre: cada acción queda en el historial con su autor.
+* Indicadores, exportación CSV sin datos personales, reentrenamiento de la IA y datos de demostración.
+* Eventos en vivo por **Socket.IO** cuando entra o cambia una solicitud.
 
-npm run typecheck && npm test     # 66 pruebas del dominio (3 usan PostgreSQL y se omiten sin TEST_DATABASE_URL)
-npm run test:http                 # pruebas HTTP/WebSocket con Nest real y una IA falsa (11; 1 con PostgreSQL)
+## Reglas de negocio clave
 
-# PostgreSQL para las pruebas (opcional):
-docker run -d --name pqrsd-pg-test -e POSTGRES_PASSWORD=pg -e POSTGRES_DB=pqrsd -p 55432:5432 postgres:16-alpine
-TEST_DATABASE_URL=postgres://postgres:pg@localhost:55432/pqrsd npm test
-npm run build && npm start        # producción (NODE_ENV=production exige STAFF_API_KEY)
-```
+* **Plazos legales como código** (Ley 1755 de 2015):
 
-Prueba rápida:
-```bash
-curl -s localhost:3001/api/v1/pqrsd -H 'content-type: application/json' -d '{
-  "text":"Hace tres semanas no llega el agua a mi barrio Santa Lucía y tengo un bebé.",
-  "citizen":{"name":"Ana Pérez","email":"ana@correo.co"}, "consent":true }'
-# → { radicado:"PQRSD-2025-000001", trackingCode:"K7M2QX", dueDate:"…", legalDays:15, message:"…" }
+  | Tipo | Plazo |
+  |---|---|
+  | Petición general, queja, reclamo, sugerencia | 15 días hábiles |
+  | Solicitud de información o documentos | 10 días hábiles |
+  | Consulta | 30 días hábiles |
+  | Denuncia | Configurable (validar con el área jurídica) |
 
-curl -s -XPOST localhost:3001/api/v1/staff/demo/seed -H 'content-type: application/json' -d '{"count":80}'   # datos de demostración
-curl -s "localhost:3001/api/v1/staff/pqrsd?sort=priority:desc&limit=5"                                       # bandeja ordenada
-```
-Con las dos piezas juntas y PostgreSQL: `STAFF_API_KEY=cambia-esto docker compose up --build` (espera `../pqrsd-router-ai`).
-
-### Variables de entorno (`.env.example`)
-| Variable | Por defecto | Para qué |
-|----------|-------------|----------|
-| `STAFF_API_KEY` | — | Clave compartida `X-Staff-Key` de los funcionarios (rutas `/staff/*` y sala de socket). **En producción hace falta esta o `STAFF_USERS`** |
-| `STAFF_USERS` | — | Cuentas con nombre `Ana Pérez:clave-ana,Luis Ruiz:clave-luis` (claves de 8+ caracteres). El nombre queda en `timeline[].actor`; `GET /staff/me` lo devuelve |
-| `AI_URL`, `AI_API_KEY`, `AI_TIMEOUT_MS` | `http://localhost:8000`, —, `8000` | Servicio de IA. Pasado el timeout se usa el respaldo y se omite la IA 20 s |
-| `DATA_DIR` | `./data` | Un archivo JSON por caso (solo si no hay `DATABASE_URL`; montar volumen) |
-| `DATABASE_URL`, `DATABASE_SSL` | —, `false` | PostgreSQL (migraciones automáticas al arrancar). TLS automático con Neon o `sslmode=require`; `DATABASE_SSL=true` lo fuerza |
-| `SMTP_URL`, `MAIL_FROM` | —, `PQRSD <no-reply@localhost>` | Correos al ciudadano (radicación, ampliación, respuesta). Vacío = no se envían |
-| `PUBLIC_APP_URL` | — | URL del frontend para el enlace de seguimiento en los correos |
-| `CORS_ORIGINS` | `http://localhost:3000` | Orígenes del frontend |
-| `PUBLIC_WRITE_LIMIT`, `THROTTLE_LIMIT`, `TRUST_PROXY` | `20`, `300`, `0` | Límites por IP por minuto (escrituras anónimas / todo). `TRUST_PROXY=1` detrás de un proxy |
-| `DENUNCIA_DAYS` | `15` | Plazo en días hábiles para denuncias (**validar con el área jurídica**) |
-| `AUTO_ASSIGN_MIN_CONFIDENCE` | `0` (apagado) | Con `0.85`, los casos que la IA clasifica con confianza y sin alertas saltan la revisión humana |
-| `FEEDBACK_ON_CONFIRM` | `false` | Enviar también las confirmaciones a la IA (por defecto no, para no reforzar sus propios errores) |
+  El término cuenta desde el **día hábil siguiente** a la radicación, con el **calendario de festivos de Colombia** (fijos, trasladados al
+  lunes y Semana Santa), en hora de Bogotá. Reclasificar no reinicia el plazo.
+* **Semáforo**: *en términos* → *en riesgo* (queda el 20 % del plazo, mínimo 3 días) → *vencida*; *respondida* al cerrar.
+* **Flujo de estados**: `por revisar → asignada → respondida → cerrada`; las transiciones inválidas responden 409.
+* **Prioridad de la bandeja**: puntaje de la IA + 20 si está vencida + 8 si está en riesgo; lo ya respondido va al final.
+* **La IA nunca bloquea al ciudadano**: si no responde, se usa un clasificador de respaldo por palabras clave, la solicitud queda marcada
+  para revisión y la IA se omite 20 s para no acumular esperas.
+* **Privacidad**: la consulta pública devuelve el mismo error si el radicado no existe o el código es incorrecto; transparencia, CSV y
+  eventos en vivo no llevan texto ni datos personales; el responsable y el motivo de una ampliación nunca salen en vistas públicas.
 
 ## Arquitectura
 
 ```
 src/
-├── domain/                      ← TODO el negocio, sin Nest (se prueba con tsx --test, sin servidor)
-│   ├── calendar.ts              festivos de Colombia, día hábil, sumar/restar días hábiles, zona horaria America/Bogota
-│   ├── deadlines.ts             plazos legales por tipo/subtipo (Ley 1755/2015), fecha de vencimiento, semáforo SLA
-│   ├── workflow.ts              pending_review → assigned → answered → closed (transiciones válidas)
-│   ├── pqrsd-service.ts         casos de uso: preview, create, tracking, confirm, reclassify, answer, close, stats, import, demo
-│   ├── classification-service.ts  IA con degradación: si cae, clasificador de respaldo y «cortacircuito» de 20 s
-│   ├── fallback-classifier.ts   palabras clave conservadoras; siempre «requiere revisión»; dependencia = Atención al Ciudadano
-│   ├── ai-client.ts             cliente HTTP de pqrsd-router-ai (errores de red/5xx → AI_UNAVAILABLE)
-│   ├── repository.ts            PqrsdRepository + BlobPqrsdRepository (JSON por caso, contador atómico, índice en memoria)
-│   ├── summary.ts / stats.ts    vistas (resumen/detalle), filtros y orden, anonimización, indicadores públicos y de funcionario
-│   ├── validation.ts            validación a mano con mensajes en español (sin class-validator)
-│   ├── rate-limiter.ts · ids.ts · csv.ts · events.ts · labels.ts · demo-data.ts · config.ts · clock.ts · errors.ts
-├── http/                        guarda de funcionario, límite de escrituras públicas, filtro de excepciones, DTOs de Swagger
-├── modules/                     controladores (público, funcionario) y gateway socket.io
-└── app.module.ts · core.module.ts · app.factory.ts · main.ts
-test/                            calendar · service · repository · validation · contract (con salida REAL de la IA) · http/ (e2e)
-docs/CONTRACT.md                 contrato compartido por los 3 repos
+├── domain/        Todo el negocio, sin dependencia de NestJS
+│   ├── calendar.ts · deadlines.ts       Festivos, días hábiles, plazos legales y semáforo
+│   ├── workflow.ts                      Flujo de estados
+│   ├── pqrsd-service.ts                 Casos de uso (radicar, consultar, corregir, asignar, ampliar, trasladar, responder…)
+│   ├── classification-service.ts        IA con respaldo automático
+│   ├── repository.ts · pg-repository.ts Persistencia (archivos en desarrollo, PostgreSQL en producción)
+│   └── stats.ts · summary.ts · csv.ts · validation.ts · staff-users.ts …
+├── infra/         Correo SMTP y cliente PostgreSQL
+├── http/          Guarda de funcionarios, límites de tasa, errores, DTOs de Swagger
+└── modules/       Controladores REST y gateway Socket.IO
+test/              Pruebas del dominio y pruebas HTTP/WebSocket
 ```
 
-Capas: **HTTP (controladores) → `PqrsdService` → repositorio / IA / eventos**. Los controladores no tienen lógica; el dominio no importa Nest.
+**Capas:** controladores → `PqrsdService` → repositorio / IA / eventos. El dominio no importa NestJS, así que se prueba sin levantar servidor.
 
-### Decisiones de diseño
-* **Plazos legales como código, no como texto**: `calendar.ts` genera los festivos de cualquier año (fijos, trasladados al lunes y de Semana Santa) y
-  se contrastó con el calendario oficial de 2025 y 2026. El término cuenta desde el **día hábil siguiente** a la radicación y siempre desde la fecha original
-  aunque el funcionario reclasifique. **Es una configuración técnica de referencia, no asesoría jurídica** (la tabla está en `deadlines.ts` y en `/public/transparency`).
-* **La IA nunca bloquea al ciudadano**: si no responde, se radica igual con el clasificador de respaldo y queda marcada para revisión.
-* **Privacidad**: la vista pública de seguimiento exige el código y no revela si un radicado existe (mismo 404); la transparencia solo agrega cifras; el CSV y los
-  eventos de socket no llevan texto ni datos personales; la retroalimentación a la IA se envía **anonimizada** (entidades personales detectadas por la IA + lo que el
-  ciudadano declaró en el formulario). Los datos del ciudadano solo se ven con la clave de funcionario.
-* **Prioridad que ve el funcionario** (`priority:desc`): `priorityScore` de la IA + 20 si ya venció + 8 si está en riesgo, así un caso de urgencia alta ya vencido (72 + 20 = 92)
-  pasa por delante de uno crítico recién llegado (90), pero uno de urgencia media vencido (62) no. Las solicitudes ya respondidas o cerradas van siempre al final (no requieren acción, por urgentes que hayan sido).
-* **Radicados sin colisiones**: el contador se reserva por rangos con escrituras serializadas y se reconstruye desde los archivos si el contador quedó atrás.
-* **Persistencia**: archivos JSON detrás de la interfaz `PqrsdRepository`. Para producción real, implementar esa interfaz sobre PostgreSQL (ver `AI_CONTEXT.md`).
+## API principal (`/api/v1`)
 
-### Patrón de renderizado
-No aplica a este repo (API JSON + WebSocket). El patrón por ruta (SSG / CSR / SSR / ISR) está justificado en el README de `pqrsd-router-frontend`.
+| Método | Ruta | Acceso |
+|---|---|---|
+| `POST` | `/pqrsd/preview` · `/pqrsd` | Público: vista previa y radicación |
+| `GET` | `/public/tracking/:radicado?code=` · `/public/transparency` | Público: consulta y transparencia |
+| `GET` | `/staff/pqrsd` · `/staff/pqrsd/:id` · `/staff/stats` · `/staff/export.csv` | Funcionario |
+| `POST` | `/staff/pqrsd/:id/{confirm, reclassify, assign, extend, transfer, answer, close}` | Funcionario |
+| `GET`/`POST` | `/staff/ai/status` · `/staff/ai/retrain` · `/staff/demo/seed` | Funcionario |
 
-## Qué está hecho y qué no
+Documentación interactiva (Swagger) en `/docs`. Contrato completo entre los 3 repositorios: [`docs/CONTRACT.md`](docs/CONTRACT.md).
 
-| Estado | Elemento |
-|--------|----------|
-| ✅ Verificado (51 pruebas ejecutadas con `tsx --test`, Node 22; `tsc` limpio) | Calendario de festivos y días hábiles, plazos legales y SLA, flujo de estados, radicación con contador concurrente, persistencia y recuperación tras reinicio, respaldo cuando la IA cae (y recuperación), retroalimentación anonimizada, filtros/orden/CSV, estadísticas, transparencia pública sin datos personales, demostración, importación por lotes con IA que muere a mitad, validación, límite de tasa, **contrato contra salida real de la IA** |
-| ✅ Verificado al retomar (Node 22, NestJS 10 real) | Capa Nest: `npm run typecheck` limpio, `npm run test:http` → 8 de 8 (HTTP + socket.io real contra una IA falsa), `npm run build`; backend compilado + `pqrsd-router-ai` real + frontend con `next start` recorridos en Chromium (radicar, socket «En vivo», caso nuevo en tiempo real, consulta SSR); `docker compose up --build` de los 3 repos. Dos correcciones: `OnModuleDestroy` se importa de `@nestjs/common` y el JSON mal formado responde `INVALID_JSON` (Nest convierte el `SyntaxError` en `BadRequestException` antes del filtro) |
-| ⚠️ Escrito pero no ejecutado | `scripts/import-github-issues.mjs` contra la API de GitHub |
-| ✅ Añadido y verificado (2026-11-11) | **PostgreSQL** (`DATABASE_URL`: migraciones al arrancar, contador atómico por año seguro con varias réplicas; probado contra PostgreSQL 16 real), **funcionario responsable** (`POST /staff/pqrsd/{id}/assign`, filtros `assignee`/`unassigned`), **ampliación del plazo** (`POST /staff/pqrsd/{id}/extend`: una vez, antes del vencimiento, hasta el doble del término), **correos al ciudadano** por SMTP (`SMTP_URL`), blueprint de Render (`render.yaml`, ver [docs/DEPLOY.md](docs/DEPLOY.md)) |
-| ✅ Añadido (entrega final) | **Cuentas de funcionario con nombre** (`STAFF_USERS`, `GET /staff/me`; quién hizo cada acción queda en el historial y nunca en vistas públicas) y **traslado por competencia** (`POST /staff/pqrsd/{id}/transfer`, Art. 21 Ley 1437: el oficio queda como respuesta, se avisa al ciudadano y se marca si pasaron los 5 días hábiles). 63 pruebas de dominio + 11 HTTP |
-| ❌ No hecho | Roles y permisos por dependencia (las cuentas con nombre tienen todas los mismos permisos), SMS, adjuntos, recordatorios automáticos de vencimiento, auditoría inmutable, paginación por cursor y filtros en SQL (`all()` carga todos los casos), Redis para varias réplicas |
+## Ejecutar en local
 
-`npm run test:http` y `npm run build` forman parte de la CI.
+Requisitos: **Node 18.18+**. Para clasificar con IA, `pqrsd-router-ai` en `:8000` (sin ella funciona con el respaldo).
 
-## Prueba de volumen con datos públicos reales
-`node scripts/import-github-issues.mjs --repo=owner/name --max=1000 --key=$STAFF_API_KEY` descarga issues reales de GitHub y los importa como casos de demostración
-(`isDemo`, borrables con `DELETE /staff/demo`). Sirve para medir rendimiento con miles de casos. **Los issues suelen estar en inglés y la IA es para español**:
-casi todos caerán en «requiere revisión», así que úsalo como prueba de **volumen**, no de precisión (o usa un repo en español).
+```bash
+npm install
+cp .env.example .env
+npm run start:dev          # http://localhost:3001/api/v1 · Swagger: http://localhost:3001/docs
+```
 
-## Limitaciones conocidas
-* Con o sin PostgreSQL, la bandeja y las estadísticas filtran en memoria (`all()`): suficiente para decenas de miles de casos; más allá hay que llevar los filtros a SQL.
-* El límite de tasa es por instancia (en memoria).
-* Los datos de demostración y el corpus de la IA son sintéticos.
-* El texto del ciudadano puede incluir datos personales que la IA no reconozca: el texto completo se guarda y solo lo ve el funcionario.
+Pruebas:
+
+```bash
+npm run typecheck
+npm test                   # dominio: calendario, plazos, flujo, servicio, repositorio, contrato con la IA
+npm run test:http          # NestJS real + HTTP + Socket.IO
+```
+
+Todo el sistema (frontend + backend + IA + PostgreSQL) con Docker, desde el repo del frontend: `docker compose up --build`.
+
+## Variables de entorno
+
+| Variable | Para qué |
+|---|---|
+| `STAFF_USERS` / `STAFF_API_KEY` | Cuentas de funcionarios (`Nombre:clave,…`) o una clave compartida. Obligatorio en producción |
+| `AI_URL`, `AI_API_KEY`, `AI_TIMEOUT_MS` | Conexión con el servicio de IA |
+| `DATABASE_URL`, `DATABASE_SSL` | PostgreSQL (migraciones automáticas al arrancar) |
+| `CORS_ORIGINS` | Dominio(s) del frontend |
+| `SMTP_URL`, `MAIL_FROM`, `PUBLIC_APP_URL` | Correos al ciudadano y enlace de seguimiento |
+| `DENUNCIA_DAYS` | Plazo de las denuncias en días hábiles |
+| `PUBLIC_WRITE_LIMIT`, `THROTTLE_LIMIT`, `TRUST_PROXY` | Límites por IP y proxy |
 
 ## Despliegue
-Render (backend + IA, blueprint [`render.yaml`](render.yaml)), **Neon** (PostgreSQL) y Vercel para el frontend: paso a paso en [docs/DEPLOY.md](docs/DEPLOY.md).
-También sirve el `Dockerfile` en cualquier proveedor (Railway, Fly.io, Cloud Run): define `DATABASE_URL`, `STAFF_API_KEY`, `AI_URL`, `CORS_ORIGINS` y `TRUST_PROXY=1`.
-Para varias réplicas, el contador ya es seguro en PostgreSQL; falta un adaptador de socket.io y el límite de tasa en Redis.
 
-## Nombre de repositorio sugerido
-`pqrsd-router-backend`
+Desplegado en **Render** (backend + IA, blueprint [`render.yaml`](render.yaml)) con **Neon** como PostgreSQL y el frontend en **Vercel**.
+Paso a paso en [`docs/DEPLOY.md`](docs/DEPLOY.md). El `Dockerfile` sirve para cualquier otro proveedor.
+
+## Datos de prueba de volumen
+
+`scripts/import-github-issues.mjs` importa issues públicos de GitHub como casos de demostración para medir rendimiento con miles de
+registros (son de prueba de volumen, no de precisión).
+
+## Limitaciones y trabajo futuro
+
+* Roles y permisos por dependencia (hoy todas las cuentas tienen los mismos permisos).
+* Llevar filtros y paginación a SQL para bandejas muy grandes.
+* Adjuntos, SMS y recordatorios automáticos antes del vencimiento.
+* Redis para escalar Socket.IO y los límites de tasa a varias réplicas.
+* Validar la tabla de plazos con el área jurídica de la entidad.
